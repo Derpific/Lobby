@@ -90,7 +90,6 @@ class LobbyPlayer extends CorePlayer {
 
     public function sendCosmeticsForm() {
         $this->sendMessage($this->lobby->getPrefix() . "Opened Cosmetics menu");
-
         //ToDo: Cosmetics (Armor, Changing Armor, Dance)
         $options = [];
         $options[] = new MenuOption("Trails");
@@ -120,7 +119,6 @@ class LobbyPlayer extends CorePlayer {
 
     public function sendGadgetsForm() {
         $this->sendMessage($this->lobby->getPrefix() . "Opened Gadgets menu");
-
         //TODO: Gadgets (Hide Players, Fly, Pets)
         $elements = [];
         $elements[] = new Label(TextFormat::GRAY . "Coming Soon..", "");

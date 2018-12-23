@@ -32,6 +32,7 @@ class Lobby extends PluginBase {
         $this->getServer()->getLogger()->notice($this->getPrefix() . "Core Enabled");
         $this->getServer()->getPluginManager()->registerEvents(new LobbyListener($this), $this);
 
+		//$this->parkour = new Parkour($this);
         $this->trails = new Trails($this);
 
         ItemBlock::addCreativeItem(new Cosmetics());
