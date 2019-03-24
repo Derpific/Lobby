@@ -2,4 +2,4 @@ name: lobby
 main: lobby\Lobby
 author: Derpific
 version: 1.0
-api: 3.0.0
+api: 3.6.5
