@@ -20,11 +20,9 @@ use pocketmine\entity\{
 };
 
 use core\mcpe\form\{
-    MenuOption,
     MenuForm,
     CustomForm,
     CustomFormResponse,
-    FormIcon
 };
 
 use core\mcpe\form\element\Label;

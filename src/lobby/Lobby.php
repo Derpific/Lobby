@@ -9,7 +9,7 @@ use lobby\item\{
     ServerSelector
 };
 
-use lobby\parkour\Parkour;
+//use lobby\parkour\Parkour;
 
 use lobby\trail\Trails;
 
@@ -22,7 +22,7 @@ use pocketmine\item\ItemBlock;
 class Lobby extends PluginBase {
     public static $instance = null;
 
-    private $parkour, $trails;
+    private $trails;
 
     const PREFIX = TextFormat::GREEN . "Lobby> " . TextFormat::GRAY;
 
@@ -34,7 +34,7 @@ class Lobby extends PluginBase {
         $this->getServer()->getLogger()->notice($this->getPrefix() . "Core Enabled");
         $this->getServer()->getPluginManager()->registerEvents(new LobbyListener($this), $this);
 
-		$this->parkour = new Parkour($this);
+		//$this->parkour = new Parkour($this);
         $this->trails = new Trails($this);
 
         ItemBlock::addCreativeItem(new Cosmetics());
