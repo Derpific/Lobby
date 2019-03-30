@@ -18,14 +18,16 @@ use pocketmine\entity\{
     EffectInstance,
     Effect
 };
-
 use core\mcpe\form\{
-    MenuForm,
-    CustomForm,
-    CustomFormResponse,
+	MenuForm,
+	CustomForm,
+	CustomFormResponse
 };
-
-use core\mcpe\form\element\Label;
+use core\mcpe\form\element\{
+	Button,
+	Image,
+	Label
+};
 
 use pocketmine\utils\TextFormat;
 
@@ -89,22 +91,27 @@ class LobbyPlayer extends CorePlayer {
     public function sendCosmeticsForm() {
         $this->sendMessage($this->lobby->getPrefix() . "Opened Cosmetics menu");
         //ToDo: Cosmetics (Armor, Changing Armor, Dance)
-        $options = [];
-        $options[] = new MenuOption("Trails");
+		$b1 = new Button(TextFormat::GRAY . "Trails");
+
+		$b1->setId(1);
+
+		$options = [
+			$b1
+		];
 
         $this->sendForm(new class(TextFormat::GOLD . "Cosmetics", TextFormat::LIGHT_PURPLE . "Select a Cosmetic!", $options) extends MenuForm {
-            public function __construct(string $title, string $text, array $options) {
-                parent::__construct($title, $text, $options);
-            }
+           	public function __construct(string $title, string $text, array $buttons = [], ?\Closure $onSubmit = null, ?\Closure $onClose = null) {
+				parent::__construct($title, $text, $buttons, $onSubmit, $onClose);
+			}
 
-            public function onSubmit(Player $player, int $selectedOption) : void {
-                $selectedOptionText = $this->getOption($selectedOption)->getText();
-
+            public function onSubmit(Player $player, Button $selectedOption) : void {
                 if($player instanceof LobbyPlayer) {
-                    if($selectedOptionText === "Trails") {
-                        if($player->hasPermission("lobby.trail.use")) {
-                            $player->sendTrailsForm();
-                        }
+                    switch($selectedOption->getId()) {
+						case 1:
+							if($player->hasPermission("lobby.trail.use")) {
+								$player->sendTrailsForm();
+							}
+						break;
                     }
                 }
             }
@@ -118,15 +125,21 @@ class LobbyPlayer extends CorePlayer {
     public function sendGadgetsForm() {
         $this->sendMessage($this->lobby->getPrefix() . "Opened Gadgets menu");
         //TODO: Gadgets (Hide Players, Fly, Pets)
-        $elements = [];
-        $elements[] = new Label(TextFormat::GRAY . "Coming Soon..", "");
+
+        $e1 = new Label(TextFormat::GRAY . "Coming Soon..");
+
+        $e1->setValue(1);
+
+        $elements = [
+        	$e1
+		];
 
         $this->sendForm(new class(TextFormat::GOLD . "Gadgets", $elements) extends CustomForm {
-            public function __construct($title, $elements) {
-                parent::__construct($title, $elements);
-            }
+            public function __construct(string $title, array $elements, \Closure $onSubmit, ?\Closure $onClose = null) {
+				parent::__construct($title, $elements, $onSubmit, $onClose);
+			}
 
-            public function onSubmit(Player $player, CustomFormResponse $data) : void {
+			public function onSubmit(Player $player, CustomFormResponse $data) : void {
 
             }
 
@@ -145,9 +158,17 @@ class LobbyPlayer extends CorePlayer {
         foreach($this->lobby->getTrails()->getAll() as $trail) {
             if($trail instanceof Trail) {
                 if(empty($trail->getIcon())) {
-                    $options[] = new MenuOption($trail->getName());
+                	$b1 = new Button($trail->getName());
+
+                	$b1->setId($trail->getName());
+
+                	$options[] = $b1;
                 }
-                $options[] = new MenuOption($trail->getName(), new FormIcon(FormIcon::IMAGE_TYPE_URL, $trail->getIcon()));
+                $b2 = new Button($trail->getName(), new Image($trail->getIcon(), Image::TYPE_URL));
+
+                $b2->setId($trail->getName());
+
+                $options[] = $b2;
             }
         }
         $this->sendForm(new class(TextFormat::GOLD . "Trails", TextFormat::LIGHT_PURPLE . "Select a Trail!", $options, $trail) extends MenuForm {
@@ -159,11 +180,9 @@ class LobbyPlayer extends CorePlayer {
                 $this->trail = $trail;
             }
 
-            public function onSubmit(Player $player, int $selectedOption) : void {
-                $selectedOptionText = $this->getOption($selectedOption)->getText();
-
+            public function onSubmit(Player $player, Button $selectedOption) : void {;
                 if($player instanceof LobbyPlayer) {
-                    $trail = Lobby::getInstance()->getTrails()->getTrailFromString($selectedOptionText);
+                    $trail = Lobby::getInstance()->getTrails()->getTrailFromString($selectedOption->getValue());
 
                     if($trail instanceof Trail) {
                         if(!$player->hasPermission("lobby.trail." . $trail->getName())) {
