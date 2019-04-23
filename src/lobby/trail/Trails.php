@@ -1,12 +1,17 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace lobby\trail;
 
 use lobby\Lobby;
 use lobby\LobbyPlayer;
 
-use pocketmine\level\Position;
+use pocketmine\item\Item;
 
+use pocketmine\block\Block;
+
+use pocketmine\level\Position;
 use pocketmine\level\particle\{
     Particle,
     ExplodeParticle,
@@ -36,10 +41,6 @@ use pocketmine\level\particle\{
     TerrainParticle,
     DestroyBlockParticle
 };
-
-use pocketmine\item\Item;
-
-use pocketmine\block\Block;
 
 class Trails implements Data {
     private $lobby;

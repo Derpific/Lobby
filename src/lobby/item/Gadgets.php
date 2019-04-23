@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace lobby\item;
 
 use core\utils\CustomItem;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace lobby;
 
 use core\Core;
@@ -14,10 +16,6 @@ use lobby\item\{
 
 use lobby\trail\Trail;
 
-use pocketmine\entity\{
-    EffectInstance,
-    Effect
-};
 use core\mcpe\form\{
 	MenuForm,
 	CustomForm,
@@ -29,9 +27,14 @@ use core\mcpe\form\element\{
 	Label
 };
 
-use pocketmine\utils\TextFormat;
-
 use pocketmine\Player;
+
+use pocketmine\entity\{
+    EffectInstance,
+    Effect
+};
+
+use pocketmine\utils\TextFormat;
 
 class LobbyPlayer extends CorePlayer {
     /**
@@ -158,13 +161,13 @@ class LobbyPlayer extends CorePlayer {
         foreach($this->lobby->getTrails()->getAll() as $trail) {
             if($trail instanceof Trail) {
                 if(empty($trail->getIcon())) {
-                	$b1 = new Button($trail->getName());
+                	$b1 = new Button(TextFormat::GRAY . $trail->getName());
 
                 	$b1->setId($trail->getName());
 
                 	$options[] = $b1;
                 }
-                $b2 = new Button($trail->getName(), new Image($trail->getIcon(), Image::TYPE_URL));
+                $b2 = new Button(TextFormat::GRAY . $trail->getName(), new Image($trail->getIcon(), Image::TYPE_URL));
 
                 $b2->setId($trail->getName());
 
@@ -182,7 +185,7 @@ class LobbyPlayer extends CorePlayer {
 
             public function onSubmit(Player $player, Button $selectedOption) : void {;
                 if($player instanceof LobbyPlayer) {
-                    $trail = Lobby::getInstance()->getTrails()->getTrailFromString($selectedOption->getValue());
+                    $trail = Lobby::getInstance()->getTrails()->getTrailFromString($selectedOption->getId());
 
                     if($trail instanceof Trail) {
                         if(!$player->hasPermission("lobby.trail." . $trail->getName())) {

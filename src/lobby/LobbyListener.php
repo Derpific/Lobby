@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace lobby;
 
 use core\Core;
@@ -9,7 +11,6 @@ use core\utils\CustomItem;
 use core\stats\rank\Rank;
 
 use pocketmine\event\Listener;
-
 use pocketmine\event\player\{
     PlayerCreationEvent,
     PlayerExhaustEvent,
@@ -17,7 +18,6 @@ use pocketmine\event\player\{
     PlayerJoinEvent,
     PlayerToggleFlightEvent
 };
-
 use pocketmine\event\entity\{
     EntityDamageEvent,
     EntityDamageByEntityEvent
