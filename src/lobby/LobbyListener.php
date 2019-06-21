@@ -26,10 +26,10 @@ use pocketmine\event\entity\{
 use pocketmine\nbt\tag\CompoundTag;
 
 class LobbyListener implements Listener {
-    private $core;
+    private $lobby;
 
-    public function __construct(Lobby $core) {
-        $this->core = $core;
+    public function __construct(Lobby $lobby) {
+        $this->lobby = $lobby;
     }
 
     public function onPlayerCreation(PlayerCreationEvent $event) {
@@ -77,7 +77,7 @@ class LobbyListener implements Listener {
         $player = $event->getPlayer();
 
         if($player instanceof LobbyPlayer) {
-            $player->setLobby($this->core);
+            $player->setLobby($this->lobby);
             $player->joinLobby();
         }
     }

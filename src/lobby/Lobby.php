@@ -11,7 +11,7 @@ use lobby\item\{
     ServerSelector
 };
 
-//use lobby\parkour\Parkour;
+use lobby\parkour\Parkour;
 
 use lobby\trail\Trails;
 
@@ -25,6 +25,7 @@ class Lobby extends PluginBase {
     public static $instance = null;
 
     private $trails;
+    private $parkour;
 
     const PREFIX = TextFormat::GREEN . "Lobby> " . TextFormat::GRAY;
 
@@ -33,21 +34,24 @@ class Lobby extends PluginBase {
     }
 
     public function onEnable() {
-        $this->getServer()->getLogger()->notice($this->getPrefix() . "Core Enabled");
-        $this->getServer()->getPluginManager()->registerEvents(new LobbyListener($this), $this);
-
-		//$this->parkour = new Parkour($this);
+		$this->parkour = new Parkour($this);
         $this->trails = new Trails($this);
 
         ItemBlock::addCreativeItem(new Cosmetics());
         ItemBlock::addCreativeItem(new Gadgets());
         ItemBlock::addCreativeItem(new Profile());
         ItemBlock::addCreativeItem(new ServerSelector());
+		$this->getServer()->getLogger()->notice($this->getPrefix() . "Lobby Enabled");
+		$this->getServer()->getPluginManager()->registerEvents(new LobbyListener($this), $this);
     }
 
     public static function getInstance() : Lobby {
         return self::$instance;
     }
+
+	public function getParkour() : Parkour {
+		return $this->parkour;
+	}
 
     public function getTrails() : Trails {
         return $this->trails;
@@ -58,6 +62,6 @@ class Lobby extends PluginBase {
     }
 
     public function onDisable() {
-        $this->getServer()->getLogger()->notice($this->getPrefix() . "Core Disabled");
+        $this->getServer()->getLogger()->notice($this->getPrefix() . "Lobby Disabled");
     }
 }

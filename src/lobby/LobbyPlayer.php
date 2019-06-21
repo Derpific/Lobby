@@ -38,7 +38,7 @@ use pocketmine\utils\TextFormat;
 
 class LobbyPlayer extends CorePlayer {
     /**
-     * @var \lobby\Lobby
+     * @var Lobby
      */
     private $lobby;
 
@@ -177,13 +177,13 @@ class LobbyPlayer extends CorePlayer {
         $this->sendForm(new class(TextFormat::GOLD . "Trails", TextFormat::LIGHT_PURPLE . "Select a Trail!", $options, $trail) extends MenuForm {
             private $trail;
 
-            public function __construct(string $title, string $text, array $options, Trail $trail) {
-                parent::__construct($title, $text, $options);
+            public function __construct(string $title, string $text, array $buttons = [], ?\Closure $onSubmit = null, ?\Closure $onClose = null, Trail $trail) {
+				parent::__construct($title, $text, $buttons, $onSubmit, $onClose);
 
-                $this->trail = $trail;
-            }
+				$this->trail = $trail;
+			}
 
-            public function onSubmit(Player $player, Button $selectedOption) : void {;
+			public function onSubmit(Player $player, Button $selectedOption) : void {;
                 if($player instanceof LobbyPlayer) {
                     $trail = Lobby::getInstance()->getTrails()->getTrailFromString($selectedOption->getId());
 
