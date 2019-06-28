@@ -59,21 +59,6 @@ class LobbyPlayer extends CorePlayer {
         $this->getInventory()->setItem(7, new Gadgets());
     }
 
-    public function getNameTagFormat() : string {
-        $format = $this->getCoreUser()->getRank()->getNameTagFormat();
-        $format = str_replace("{DISPLAY_NAME}", $this->getDisplayName(), $format);
-        $format = str_replace("{NAME}", $this->getName(), $format);
-        return $format;
-    }
-
-    public function getChatFormat(string $message) : string {
-        $format = $this->getCoreUser()->getRank()->getChatFormat();
-        $format = str_replace("{DISPLAY_NAME}", $this->getDisplayName(), $format);
-        $format = str_replace("{NAME}", $this->getName(), $format);
-        $format = str_replace("{MESSAGE}", $message, $format);
-        return $format;
-    }
-
     public function spawnTrail(?Trail $trail) {
         $trail->spawnTo($this);
     }
