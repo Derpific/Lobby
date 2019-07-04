@@ -10,9 +10,8 @@ use lobby\item\{
     Profile,
     ServerSelector
 };
-
+use lobby\morph\Morph;
 use lobby\parkour\Parkour;
-
 use lobby\trail\Trails;
 
 use pocketmine\plugin\PluginBase;
@@ -24,6 +23,7 @@ use pocketmine\item\ItemBlock;
 class Lobby extends PluginBase {
     public static $instance = null;
 
+    private $morph;
     private $trails;
     private $parkour;
 
@@ -34,6 +34,7 @@ class Lobby extends PluginBase {
     }
 
     public function onEnable() {
+    	$this->morph = new Morph($this);
 		$this->parkour = new Parkour($this);
         $this->trails = new Trails($this);
 
@@ -48,6 +49,10 @@ class Lobby extends PluginBase {
     public static function getInstance() : Lobby {
         return self::$instance;
     }
+
+    public function getMorph() : Morph {
+    	return $this->morp;
+	}
 
 	public function getParkour() : Parkour {
 		return $this->parkour;

@@ -8,6 +8,8 @@ use core\Core;
 
 use core\utils\CustomItem;
 
+use core\mcpe\network\InventoryTransactionPacket;
+
 use core\stats\rank\Rank;
 
 use pocketmine\event\Listener;
@@ -16,12 +18,15 @@ use pocketmine\event\player\{
     PlayerExhaustEvent,
     PlayerInteractEvent,
     PlayerJoinEvent,
-    PlayerToggleFlightEvent
+    PlayerToggleFlightEvent,
+	PlayerMoveEvent,
+	PlayerQuitEvent
 };
 use pocketmine\event\entity\{
     EntityDamageEvent,
     EntityDamageByEntityEvent
 };
+use pocketmine\event\server\DataPacketReceiveEvent;
 
 use pocketmine\nbt\tag\CompoundTag;
 
@@ -104,6 +109,26 @@ class LobbyListener implements Listener {
         }
     }
 
+	public function onPlayerMoveEvents(PlayerMoveEvent $event) {
+		$player = $event->getPlayer();
+
+		if($player instanceof LobbyPlayer) {
+			if($player->isMorphed()) {
+				$player->moveMorph($player->getMorph()->getName());
+			}
+		}
+	}
+
+	public function onPlayerQuitEvents(PlayerQuitEvent $event) {
+		$player = $event->getPlayer();
+
+		if($player instanceof LobbyPlayer) {
+			if($player->isMorphed()) {
+				$player->removeMorph($player->getMorph()->getName());
+			}
+		}
+	}
+
     public function onEntityDamageEvents(EntityDamageEvent $event) {
         if($event instanceof EntityDamageByEntityEvent) {
             $victim = $event->getEntity();
@@ -122,4 +147,23 @@ class LobbyListener implements Listener {
             }
         }
     }
+
+    public function onDataPacketReceiveEvents(DataPacketReceiveEvent $event) {
+    	$pk = $event->getPacket();
+    	$player = $event->getPlayer();
+
+    	if($player instanceof LobbyPlayer) {
+			if($pk instanceof InventoryTransactionPacket) {
+				if($pk->transactionType === InventoryTransactionPacket::TYPE_USE_ITEM_ON_ENTITY && $pk->trData->actionType === InventoryTransactionPacket::USE_ITEM_ON_ENTITY_ACTION_INTERACT) {
+					$entity = $pk->trData;
+
+					foreach($this->lobby->getServer()->getOnlinePlayers() as $onlinePlayer) {
+						if($onlinePlayer->getMorph()->getEntityRuntimeId() === $entity->entityRuntimeId) {
+							return;
+						}
+					}
+				}
+			}
+		}
+	}
 }
