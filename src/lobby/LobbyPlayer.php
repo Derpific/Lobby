@@ -201,7 +201,7 @@ class LobbyPlayer extends CorePlayer {
 	public function moveMorph() {
 		$pk = new MoveEntityAbsolutePacket();
 		$pk->entityRuntimeId = array_key_last($this->lobby->getMorph()->morphs[$this->getName()]);
-		$pk->position = $this->getPosition();
+		$pk->position = $this->asVector3()->subtract(0, 0.4, 0);
 		$pk->xRot = $this->pitch;
 		$pk->yRot = $this->yaw;
 		$pk->zRot = $this->yaw;
