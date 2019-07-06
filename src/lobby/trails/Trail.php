@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace lobby\trail;
+namespace lobby\trails;
 
 use lobby\Lobby;
 use lobby\LobbyPlayer;

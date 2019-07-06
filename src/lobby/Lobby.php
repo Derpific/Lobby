@@ -12,7 +12,7 @@ use lobby\item\{
 };
 use lobby\morph\Morph;
 use lobby\parkour\Parkour;
-use lobby\trail\Trails;
+use lobby\trails\Trails;
 
 use pocketmine\plugin\PluginBase;
 

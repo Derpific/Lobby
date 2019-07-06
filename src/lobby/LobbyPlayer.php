@@ -14,7 +14,7 @@ use lobby\item\{
     Gadgets
 };
 
-use lobby\trail\Trail;
+use lobby\trails\Trail;
 
 use core\mcpe\form\{
 	MenuForm,
@@ -86,7 +86,7 @@ class LobbyPlayer extends CorePlayer {
 				if($player instanceof LobbyPlayer) {
 					switch($selectedOption->getId()) {
 						case 1:
-							if($player->hasPermission("lobby.trail.use")) {
+							if($player->hasPermission("lobby.trails.use")) {
 								$player->sendTrailsForm();
 							}
 							break;
@@ -163,7 +163,7 @@ class LobbyPlayer extends CorePlayer {
 					$trail = Lobby::getInstance()->getTrails()->getTrailFromString($selectedOption->getId());
 
 					if($trail instanceof Trail) {
-						if(!$player->hasPermission("lobby.trail." . $trail->getName())) {
+						if(!$player->hasPermission("lobby.trails." . $trail->getName())) {
 							$player->sendMessage(Core::getInstance()->getErrorPrefix() . "You do not have Permission to use this Trail");
 						} else {
 							$player->spawnTrail($this->trail);

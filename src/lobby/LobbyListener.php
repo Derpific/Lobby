@@ -114,7 +114,7 @@ class LobbyListener implements Listener {
 
 		if($player instanceof LobbyPlayer) {
 			if($player->isMorphed()) {
-				$player->moveMorph($player->getMorph()->getName());
+				$player->moveMorph();
 			}
 		}
 	}
@@ -124,7 +124,7 @@ class LobbyListener implements Listener {
 
 		if($player instanceof LobbyPlayer) {
 			if($player->isMorphed()) {
-				$player->removeMorph($player->getMorph()->getName());
+				$player->removeMorph();
 			}
 		}
 	}
@@ -158,8 +158,10 @@ class LobbyListener implements Listener {
 					$entity = $pk->trData;
 
 					foreach($this->lobby->getServer()->getOnlinePlayers() as $onlinePlayer) {
-						if($onlinePlayer->getMorph()->getEntityRuntimeId() === $entity->entityRuntimeId) {
-							return;
+						if($onlinePlayer instanceof LobbyPlayer) {
+							if($onlinePlayer->getMorph()[2] === $entity->entityRuntimeId) {
+								return;
+							}
 						}
 					}
 				}
