@@ -51,7 +51,7 @@ class Lobby extends PluginBase {
     }
 
     public function getMorph() : Morph {
-    	return $this->morp;
+    	return $this->morph;
 	}
 
 	public function getParkour() : Parkour {
