@@ -3,3 +3,4 @@ main: lobby\Lobby
 author: Derpific
 version: 1.0
 api: 3.6.5
+depend: [Core]
