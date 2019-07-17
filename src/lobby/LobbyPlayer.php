@@ -28,9 +28,9 @@ use core\mcpe\form\element\{
 };
 
 use pocketmine\network\mcpe\protocol\{
-	AddEntityPacket,
-	MoveEntityAbsolutePacket,
-	RemoveEntityPacket
+	AddActorPacket,
+	MoveActorAbsolutePacket,
+	RemoveActorPacket
 };
 
 use pocketmine\Player;
@@ -187,7 +187,7 @@ class LobbyPlayer extends CorePlayer {
 	}
 
 	public function morph(int $id) {
-		$pk = new AddEntityPacket();
+		$pk = new AddActorPacket();
 		$pk->entityRuntimeId = Entity::$entityCount++;
 		$pk->type = $id;
 		$pk->position = $this->getPosition();
@@ -199,7 +199,7 @@ class LobbyPlayer extends CorePlayer {
 	}
 
 	public function moveMorph() {
-		$pk = new MoveEntityAbsolutePacket();
+		$pk = new MoveActorAbsolutePacket();
 		$pk->entityRuntimeId = array_key_last($this->lobby->getMorph()->morphs[$this->getName()]);
 		$pk->position = $this->asVector3()->subtract(0, 0.4, 0);
 		$pk->xRot = $this->pitch;
@@ -211,7 +211,7 @@ class LobbyPlayer extends CorePlayer {
 	}
 
 	public function removeMorph() {
-		$pk = new RemoveEntityPacket();
+		$pk = new RemoveActorPacket();
 		$pk->entityRuntimeId = array_key_last($this->lobby->getMorph()->morphs[$this->getName()]);
 
 		unset($this->lobby->getMorph()->morphs[$this->getName()]);
