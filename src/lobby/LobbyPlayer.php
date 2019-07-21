@@ -87,16 +87,18 @@ class LobbyPlayer extends CorePlayer {
 		];
 
 		$this->sendForm(new MenuForm(TextFormat::GOLD . "Cosmetics", TextFormat::LIGHT_PURPLE . "Select a Cosmetic!", $options,
-			function(LobbyPlayer $player, Button $selectedOption) : void {
-				switch($selectedOption->getId()) {
-					case 1:
-						if($player->hasPermission("lobby.trails.use")) {
-							$player->sendTrailsForm();
-						}
-					break;
+			function(Player $player, Button $selectedOption) : void {
+				if($player instanceof LobbyPlayer) {
+					switch($selectedOption->getId()) {
+						case 1:
+							if($player->hasPermission("lobby.trails.use")) {
+								$player->sendTrailsForm();
+							}
+						break;
+					}
 				}
 			},
-			function(LobbyPlayer $player) : void {
+			function(Player $player) : void {
 				$player->sendMessage(Lobby::getInstance()->getPrefix() . "Closed Cosmetics menu");
 			}
 		));
@@ -114,10 +116,10 @@ class LobbyPlayer extends CorePlayer {
 		];
 
 		$this->sendForm(new CustomForm(TextFormat::GOLD . "Gadgets", $elements,
-			function(LobbyPlayer $player, Button $selectedOption) : void {
+			function(Player $player, Button $selectedOption) : void {
 
 			},
-			function(LobbyPlayer $player) : void {
+			function(Player $player) : void {
 				$player->sendMessage(Lobby::getInstance()->getPrefix() . "Closed Gadgets menu");
 			}
 		));
@@ -143,25 +145,27 @@ class LobbyPlayer extends CorePlayer {
 			}
 		}
 		$this->sendForm(new MenuForm(TextFormat::GOLD . "Trails", TextFormat::LIGHT_PURPLE . "Select a Trail!", $options,
-			function(LobbyPlayer $player, Button $button) {
-				$trail = Lobby::getInstance()->getTrails()->getTrail($button->getId());
+			function(Player $player, Button $button) {
+				if($player instanceof LobbyPlayer) {
+					$trail = Lobby::getInstance()->getTrails()->getTrail($button->getId());
 
-				if($trail instanceof Trail) {
-					if(!$player->hasPermission("lobby.trails." . $trail->getName())) {
-						$player->sendMessage(Core::getInstance()->getErrorPrefix() . "You do not have Permission to use this Trail");
-					}
-					if($player->getTrail()->getName() === $trail->getName()) {
-						$player->sendMessage(Core::getInstance()->getErrorPrefix() . "You already have the Trail " . $trail->getName() . " Applied");
-					} else {
-						if(!is_null($player->getTrail())) {
-							$player->sendMessage(Lobby::getInstance()->getPrefix() . "Removed your old Trail");
+					if($trail instanceof Trail) {
+						if(!$player->hasPermission("lobby.trails." . $trail->getName())) {
+							$player->sendMessage(Core::getInstance()->getErrorPrefix() . "You do not have Permission to use this Trail");
 						}
-						$player->spawnTrail($trail);
-						$player->sendMessage(Lobby::getInstance()->getPrefix() . "Applied the Trail: " . $trail->getName());
+						if($player->getTrail()->getName() === $trail->getName()) {
+							$player->sendMessage(Core::getInstance()->getErrorPrefix() . "You already have the Trail " . $trail->getName() . " Applied");
+						} else {
+							if(!is_null($player->getTrail())) {
+								$player->sendMessage(Lobby::getInstance()->getPrefix() . "Removed your old Trail");
+							}
+							$player->spawnTrail($trail);
+							$player->sendMessage(Lobby::getInstance()->getPrefix() . "Applied the Trail: " . $trail->getName());
+						}
 					}
 				}
 			},
-			function(LobbyPlayer $player) {
+			function(Player $player) {
 				$player->sendMessage(Lobby::getInstance()->getPrefix() . "Closed Trails menu");
 			}
 		));
