@@ -64,15 +64,19 @@ class LobbyListener implements Listener {
             if($player instanceof LobbyPlayer) {
                 if($item->getId() === CustomItem::ENDER_CHEST) {
                     $player->sendCosmeticsForm();
+                    $player->sendMessage($this->lobby->getPrefix() . "Opened Cosmetics menu");
                 }
                 if($item->getId() === CustomItem::REDSTONE_TORCH) {
-                    $player->sendGadgetsForm();
+					$player->sendGadgetsForm();
+					$player->sendMessage($this->lobby->getPrefix() . "Opened Gadgets menu");
                 }
                 if($item->getId() === CustomItem::MOB_HEAD) {
-                    $player->sendProfileForm();
+                	$player->sendProfileForm();
+					$player->sendMessage($this->lobby->getPrefix() . "Opened Profile menu");
                 }
                 if($item->getId() === CustomItem::END_PORTAL_FRAME) {
-                    $player->sendServerSelectorForm();
+                	$player->sendServerSelectorForm();
+					$player->sendMessage($this->lobby->getPrefix() . "Opened Servers menu");
                 }
             }
         }
@@ -123,9 +127,7 @@ class LobbyListener implements Listener {
 		$player = $event->getPlayer();
 
 		if($player instanceof LobbyPlayer) {
-			if($player->isMorphed()) {
-				$player->removeMorph();
-			}
+			$player->leaveLobby();
 		}
 	}
 

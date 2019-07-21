@@ -18,22 +18,18 @@ use lobby\trails\Trail;
 
 use core\mcpe\form\{
 	MenuForm,
-	CustomForm,
-	CustomFormResponse
+	CustomForm
 };
 use core\mcpe\form\element\{
 	Button,
 	Image,
 	Label
 };
-
 use pocketmine\network\mcpe\protocol\{
-	AddEntityPacket,
-	MoveEntityAbsolutePacket,
-	RemoveEntityPacket
+	AddActorPacket,
+	MoveActorAbsolutePacket,
+	RemoveActorPacket,
 };
-
-use pocketmine\Player;
 
 use pocketmine\entity\{
 	EffectInstance,
@@ -43,11 +39,17 @@ use pocketmine\entity\{
 
 use pocketmine\utils\TextFormat;
 
+use pocketmine\level\Position;
+
 class LobbyPlayer extends CorePlayer {
     /**
      * @var Lobby
      */
     private $lobby;
+	/**
+	 * @var Trail|null
+	 */
+    public $trail = null;
 
     public $doubleJump = [];
 
@@ -66,8 +68,15 @@ class LobbyPlayer extends CorePlayer {
         $this->getInventory()->setItem(7, new Gadgets());
     }
 
+    public function leaveLobby() {
+    	$this->despawnTrail();
+
+		if($this->isMorphed()) {
+			$this->removeMorph();
+		}
+	}
+
 	public function sendCosmeticsForm() {
-		$this->sendMessage($this->lobby->getPrefix() . "Opened Cosmetics menu");
 		//ToDo: Cosmetics (Armor, Changing Armor, Dance)
 		$b1 = new Button(TextFormat::GRAY . "Trails");
 
@@ -77,31 +86,23 @@ class LobbyPlayer extends CorePlayer {
 			$b1
 		];
 
-		$this->sendForm(new class(TextFormat::GOLD . "Cosmetics", TextFormat::LIGHT_PURPLE . "Select a Cosmetic!", $options) extends MenuForm {
-			public function __construct(string $title, string $text, array $buttons = [], ?\Closure $onSubmit = null, ?\Closure $onClose = null) {
-				parent::__construct($title, $text, $buttons, $onSubmit, $onClose);
-			}
-
-			public function onSubmit(Player $player, Button $selectedOption) : void {
-				if($player instanceof LobbyPlayer) {
-					switch($selectedOption->getId()) {
-						case 1:
-							if($player->hasPermission("lobby.trails.use")) {
-								$player->sendTrailsForm();
-							}
-							break;
-					}
+		$this->sendForm(new MenuForm(TextFormat::GOLD . "Cosmetics", TextFormat::LIGHT_PURPLE . "Select a Cosmetic!", $options,
+			function(LobbyPlayer $player, Button $selectedOption) : void {
+				switch($selectedOption->getId()) {
+					case 1:
+						if($player->hasPermission("lobby.trails.use")) {
+							$player->sendTrailsForm();
+						}
+					break;
 				}
+			},
+			function(LobbyPlayer $player) : void {
+				$player->sendMessage(Lobby::getInstance()->getPrefix() . "Closed Cosmetics menu");
 			}
-
-			public function onClose(Player $player) : void {
-				$player->sendMessage(Lobby::getInstance()->getPrefix() . "Closed Servers menu");
-			}
-		});
+		));
 	}
 
 	public function sendGadgetsForm() {
-		$this->sendMessage($this->lobby->getPrefix() . "Opened Gadgets menu");
 		//TODO: Gadgets (Hide Players, Fly, Pets)
 
 		$e1 = new Label(TextFormat::GRAY . "Coming Soon..");
@@ -112,26 +113,18 @@ class LobbyPlayer extends CorePlayer {
 			$e1
 		];
 
-		$this->sendForm(new class(TextFormat::GOLD . "Gadgets", $elements) extends CustomForm {
-			public function __construct(string $title, array $elements, \Closure $onSubmit, ?\Closure $onClose = null) {
-				parent::__construct($title, $elements, $onSubmit, $onClose);
-			}
+		$this->sendForm(new CustomForm(TextFormat::GOLD . "Gadgets", $elements,
+			function(LobbyPlayer $player, Button $selectedOption) : void {
 
-			public function onSubmit(Player $player, CustomFormResponse $data) : void {
-
-			}
-
-			public function onClose(Player $player) : void {
+			},
+			function(LobbyPlayer $player) : void {
 				$player->sendMessage(Lobby::getInstance()->getPrefix() . "Closed Gadgets menu");
 			}
-		});
+		));
 	}
 
 	public function sendTrailsForm() {
-		$this->sendMessage(Lobby::getInstance()->getPrefix() . "Opened Trails menu");
-
 		$options = [];
-		$trail = null;
 
 		foreach($this->lobby->getTrails()->getAll() as $trail) {
 			if($trail instanceof Trail) {
@@ -149,33 +142,29 @@ class LobbyPlayer extends CorePlayer {
 				$options[] = $b2;
 			}
 		}
-		$this->sendForm(new class(TextFormat::GOLD . "Trails", TextFormat::LIGHT_PURPLE . "Select a Trail!", $options, $trail) extends MenuForm {
-			private $trail;
+		$this->sendForm(new MenuForm(TextFormat::GOLD . "Trails", TextFormat::LIGHT_PURPLE . "Select a Trail!", $options,
+			function(LobbyPlayer $player, Button $button) {
+				$trail = Lobby::getInstance()->getTrails()->getTrail($button->getId());
 
-			public function __construct(string $title, string $text, array $buttons = [], ?\Closure $onSubmit = null, ?\Closure $onClose = null, Trail $trail) {
-				parent::__construct($title, $text, $buttons, $onSubmit, $onClose);
-
-				$this->trail = $trail;
-			}
-
-			public function onSubmit(Player $player, Button $selectedOption) : void {;
-				if($player instanceof LobbyPlayer) {
-					$trail = Lobby::getInstance()->getTrails()->getTrailFromString($selectedOption->getId());
-
-					if($trail instanceof Trail) {
-						if(!$player->hasPermission("lobby.trails." . $trail->getName())) {
-							$player->sendMessage(Core::getInstance()->getErrorPrefix() . "You do not have Permission to use this Trail");
-						} else {
-							$player->spawnTrail($this->trail);
+				if($trail instanceof Trail) {
+					if(!$player->hasPermission("lobby.trails." . $trail->getName())) {
+						$player->sendMessage(Core::getInstance()->getErrorPrefix() . "You do not have Permission to use this Trail");
+					}
+					if($player->getTrail()->getName() === $trail->getName()) {
+						$player->sendMessage(Core::getInstance()->getErrorPrefix() . "You already have the Trail " . $trail->getName() . " Applied");
+					} else {
+						if(!is_null($player->getTrail())) {
+							$player->sendMessage(Lobby::getInstance()->getPrefix() . "Removed your old Trail");
 						}
+						$player->spawnTrail($trail);
+						$player->sendMessage(Lobby::getInstance()->getPrefix() . "Applied the Trail: " . $trail->getName());
 					}
 				}
-			}
-
-			public function onClose(Player $player) : void {
+			},
+			function(LobbyPlayer $player) {
 				$player->sendMessage(Lobby::getInstance()->getPrefix() . "Closed Trails menu");
 			}
-		});
+		));
 	}
 
 	public function isMorphed() {
@@ -187,7 +176,7 @@ class LobbyPlayer extends CorePlayer {
 	}
 
 	public function morph(int $id) {
-		$pk = new AddEntityPacket();
+		$pk = new AddActorPacket();
 		$pk->entityRuntimeId = Entity::$entityCount++;
 		$pk->type = $id;
 		$pk->position = $this->getPosition();
@@ -199,7 +188,7 @@ class LobbyPlayer extends CorePlayer {
 	}
 
 	public function moveMorph() {
-		$pk = new MoveEntityAbsolutePacket();
+		$pk = new MoveActorAbsolutePacket();
 		$pk->entityRuntimeId = array_key_last($this->lobby->getMorph()->morphs[$this->getName()]);
 		$pk->position = $this->asVector3()->subtract(0, 0.4, 0);
 		$pk->xRot = $this->pitch;
@@ -211,7 +200,7 @@ class LobbyPlayer extends CorePlayer {
 	}
 
 	public function removeMorph() {
-		$pk = new RemoveEntityPacket();
+		$pk = new RemoveActorPacket();
 		$pk->entityRuntimeId = array_key_last($this->lobby->getMorph()->morphs[$this->getName()]);
 
 		unset($this->lobby->getMorph()->morphs[$this->getName()]);
@@ -220,20 +209,54 @@ class LobbyPlayer extends CorePlayer {
 		$this->getServer()->broadcastPacket($this->getServer()->getOnlinePlayers(), $pk);
 	}
 
-    public function spawnTrail(?Trail $trail) {
-        $trail->spawnTo($this);
-    }
+	public function getTrail() : ?Trail {
+    	return $this->trail;
+	}
 
-    public function despawnTrail(Trail $trail) {
-        $trail->despawnFrom($this);
-    }
+	public function spawnTrail(?Trail $trail) {
+		$this->trail = $trail;
+	}
 
-    public function randomTrail() {
-        foreach($this->lobby->getTrails()->getAll() as $trail) {
-            if($trail instanceof Trail) {
-                $this->despawnTrail($trail);
-                $trail->spawnRandom($this);
-            }
-        }
-    }
+	public function updateTrail() {
+		$y = $this->y;
+		$y2 = $y + 0.5;
+		$y3 = $y2 + 1.4;
+
+		$this->getLevel()->addParticle($this->lobby->getTrails()->convertTrail($this->getTrail()->getName(), new Position($this->x, mt_rand($y, rand($y2, $y3)), $this->z)));
+	}
+
+	public function despawnTrail() {
+    	$this->trail = null;
+	}
+
+	public function randomTrail() {
+		foreach($this->lobby->getTrails()->getAll() as $trail) {
+			if($trail instanceof Trail) {
+				$random = round(rand(0, 114));
+				$int = rand(1, 4);
+				$trail = null;
+
+				switch($int) {
+					case 1:
+						$trail = "item_" . $random;
+						break;
+					case 2:
+						$trail = "block_" . $random;
+						break;
+					case 3:
+						$trail = "destroyblock_" . $random;
+						break;
+					case 4:
+						$trail = $random;
+						break;
+				}
+				$y = $this->y;
+				$y2 = $y + 0.5;
+				$y3 = $y2 + 1.4;
+
+				$this->getLevel()->addParticle($this->lobby->getTrails()->convertTrail($trail, new Position($this->x, mt_rand($y, rand($y2, $y3)), $this->z)));
+				$this->trail = $this->lobby->getTrails()->getTrail($trail);
+			}
+		}
+	}
 }
