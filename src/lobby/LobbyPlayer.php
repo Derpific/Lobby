@@ -28,7 +28,7 @@ use core\mcpe\form\element\{
 use pocketmine\network\mcpe\protocol\{
 	AddActorPacket,
 	MoveActorAbsolutePacket,
-	RemoveActorPacket,
+	RemoveActorPacket
 };
 
 use pocketmine\entity\{
