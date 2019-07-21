@@ -109,7 +109,6 @@ class LobbyPlayer extends CorePlayer {
 
 	public function sendGadgetsForm() {
 		//TODO: Gadgets (Hide Players, Fly, Pets)
-
 		$e1 = new Label(TextFormat::GRAY . "Coming Soon..");
 
 		$e1->setValue(1);
@@ -119,7 +118,7 @@ class LobbyPlayer extends CorePlayer {
 		];
 
 		$this->sendForm(new CustomForm(TextFormat::GOLD . "Gadgets", $elements,
-			function(Player $player, Button $selectedOption) : void {
+			function(Player $player, CustomFormResponse $response) : void {
 
 			},
 			function(Player $player) : void {
