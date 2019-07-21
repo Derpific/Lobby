@@ -10,6 +10,6 @@ use pocketmine\utils\TextFormat;
 
 class Profile extends CustomItem {
     public function __construct() {
-        parent::__construct(self::MOB_HEAD, TextFormat::AQUA . "Profile", [TextFormat::GOLD . "Tap somewhere to open your Profile menu"], 1);
+        parent::__construct(self::MOB_HEAD, 0, "Profile", TextFormat::AQUA . "Profile", [TextFormat::GOLD . "Tap somewhere to open your Profile menu"], 1);
     }
 }

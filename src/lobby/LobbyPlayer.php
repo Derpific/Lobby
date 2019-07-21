@@ -25,6 +25,9 @@ use core\mcpe\form\element\{
 	Image,
 	Label
 };
+
+use pocketmine\Player;
+
 use pocketmine\network\mcpe\protocol\{
 	AddActorPacket,
 	MoveActorAbsolutePacket,
@@ -145,7 +148,7 @@ class LobbyPlayer extends CorePlayer {
 			}
 		}
 		$this->sendForm(new MenuForm(TextFormat::GOLD . "Trails", TextFormat::LIGHT_PURPLE . "Select a Trail!", $options,
-			function(Player $player, Button $button) {
+			function(Player $player, Button $button) : void {
 				if($player instanceof LobbyPlayer) {
 					$trail = Lobby::getInstance()->getTrails()->getTrail($button->getId());
 
@@ -165,7 +168,7 @@ class LobbyPlayer extends CorePlayer {
 					}
 				}
 			},
-			function(Player $player) {
+			function(Player $player) : void {
 				$player->sendMessage(Lobby::getInstance()->getPrefix() . "Closed Trails menu");
 			}
 		));

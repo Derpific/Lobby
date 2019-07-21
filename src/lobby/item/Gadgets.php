@@ -10,6 +10,6 @@ use pocketmine\utils\TextFormat;
 
 class Gadgets extends CustomItem {
     public function __construct() {
-        parent::__construct(self::REDSTONE_TORCH, TextFormat::AQUA . "Gadgets", [TextFormat::GOLD . "Tap somewhere to open the Gadgets menu"], 1);
+        parent::__construct(self::REDSTONE_TORCH, 0, "Gadgets", TextFormat::AQUA . "Gadgets", [TextFormat::GOLD . "Tap somewhere to open the Gadgets menu"], 1);
     }
 }

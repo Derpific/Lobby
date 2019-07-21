@@ -55,31 +55,25 @@ class LobbyListener implements Listener {
     public function onPlayerInteract(PlayerInteractEvent $event) {
         $player = $event->getPlayer();
         $item = $event->getItem();
-        $tag = $item->getNamedTagEntry(CustomItem::CUSTOM);
 
-        if($tag === null) {
-            return;
-        }
-        if($tag instanceof CompoundTag) {
-            if($player instanceof LobbyPlayer) {
-                if($item->getId() === CustomItem::ENDER_CHEST) {
-                    $player->sendCosmeticsForm();
-                    $player->sendMessage($this->lobby->getPrefix() . "Opened Cosmetics menu");
-                }
-                if($item->getId() === CustomItem::REDSTONE_TORCH) {
-					$player->sendGadgetsForm();
-					$player->sendMessage($this->lobby->getPrefix() . "Opened Gadgets menu");
-                }
-                if($item->getId() === CustomItem::MOB_HEAD) {
-                	$player->sendProfileForm();
-					$player->sendMessage($this->lobby->getPrefix() . "Opened Profile menu");
-                }
-                if($item->getId() === CustomItem::END_PORTAL_FRAME) {
-                	$player->sendServerSelectorForm();
-					$player->sendMessage($this->lobby->getPrefix() . "Opened Servers menu");
-                }
-            }
-        }
+		if($player instanceof LobbyPlayer) {
+			if($item->getNamedTagEntry("Cosmetics")) {
+				$player->sendCosmeticsForm();
+				$player->sendMessage($this->lobby->getPrefix() . "Opened Cosmetics menu");
+			}
+			if($item->getNamedTagEntry("Gadgets")) {
+				$player->sendGadgetsForm();
+				$player->sendMessage($this->lobby->getPrefix() . "Opened Gadgets menu");
+			}
+			if($item->getNamedTagEntry("Profile")) {
+				$player->sendProfileForm();
+				$player->sendMessage($this->lobby->getPrefix() . "Opened Profile menu");
+			}
+			if($item->getNamedTagEntry("Server Selector")) {
+				$player->sendServerSelectorForm();
+				$player->sendMessage($this->lobby->getPrefix() . "Opened Servers menu");
+			}
+		}
     }
 
     public function onPlayerJoin(PlayerJoinEvent $event) {
