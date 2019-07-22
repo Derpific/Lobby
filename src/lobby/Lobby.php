@@ -4,6 +4,8 @@ declare(strict_types = 1);
 
 namespace lobby;
 
+use core\Core;
+
 use lobby\item\{
     Cosmetics,
     Gadgets,
@@ -31,6 +33,8 @@ class Lobby extends PluginBase {
 
     public function onLoad() {
         self::$instance = $this;
+		
+		$this->getServer()->getNetwork()->setName(TextFormat::BOLD . Core::getInstance()->getPrefix() . TextFormat::GREEN . "Lobby");
     }
 
     public function onEnable() {

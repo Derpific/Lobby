@@ -60,7 +60,7 @@ class Trails implements Data {
         foreach($this->lobby->getServer()->getOnlinePlayers() as $onlinePlayer) {
             if($onlinePlayer instanceof LobbyPlayer) {
             	if(!is_null($onlinePlayer->getTrail())) {
-            		$onlinePlayer->spawnTrail($onlinePlayer->getTrail());
+            		$onlinePlayer->updateTrail($onlinePlayer->getTrail());
 				}
             }
         }

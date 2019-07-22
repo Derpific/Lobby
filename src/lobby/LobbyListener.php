@@ -111,7 +111,7 @@ class LobbyListener implements Listener {
 		$player = $event->getPlayer();
 
 		if($player instanceof LobbyPlayer) {
-			if($player->isMorphed()) {
+			if(!is_null($player->getMorph())) {
 				$player->moveMorph();
 			}
 		}
@@ -134,6 +134,9 @@ class LobbyListener implements Listener {
                 if($victim->getCoreUser()->getRank()->getValue() === Rank::STAFF) {
                     if(!$damager->hasPermission("lobby.essential.staffpuncher")) {
                         $damager->sendMessage(Core::getInstance()->getErrorPrefix() . "You don't have permission to Punch a Staff!");
+					}
+					if(!$victim->hasPermission("lobby.essential.staffpuncher.exempt")) {
+                        $damager->sendMessage(Core::getInstance()->getErrorPrefix() . "This Staff is special. Can't punch him today!");
                     } else {
                         $victim->knockBack($victim, 0, 6, 0, 1);
                         $victim->sendMessage(Core::getInstance()->getPrefix() . $damager->getName() . " Punched you! Staff disadvantages..");
@@ -155,8 +158,10 @@ class LobbyListener implements Listener {
 
 					foreach($this->lobby->getServer()->getOnlinePlayers() as $onlinePlayer) {
 						if($onlinePlayer instanceof LobbyPlayer) {
-							if($onlinePlayer->getMorph()[2] === $entity->entityRuntimeId) {
-								return;
+							if(!is_null($onlinePlayer->getMorph())) {
+								if($onlinePlayer->getMorph()[2] === $entity->entityRuntimeId) {
+									return;
+								}
 							}
 						}
 					}

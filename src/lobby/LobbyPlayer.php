@@ -75,7 +75,7 @@ class LobbyPlayer extends CorePlayer {
     public function leaveLobby() {
     	$this->despawnTrail();
 
-		if($this->isMorphed()) {
+		if(is_null($this->getMorph())) {
 			$this->removeMorph();
 		}
 	}
@@ -156,10 +156,11 @@ class LobbyPlayer extends CorePlayer {
 						if(!$player->hasPermission("lobby.trails." . $trail->getName())) {
 							$player->sendMessage(Core::getInstance()->getErrorPrefix() . "You do not have Permission to use this Trail");
 						}
-						if($player->getTrail()->getName() === $trail->getName()) {
-							$player->sendMessage(Core::getInstance()->getErrorPrefix() . "You already have the Trail " . $trail->getName() . " Applied");
+						if(!is_null($player->getTrail()) && $player->getTrail()->getName() === $trail->getName()) {
+							$player->sendMessage(Core::getInstance()->getErrorPrefix() . "You already have the Trail " . $trail->getName() . " Applied");						
 						} else {
 							if(!is_null($player->getTrail())) {
+								$player->despawnTrail();
 								$player->sendMessage(Lobby::getInstance()->getPrefix() . "Removed your old Trail");
 							}
 							$player->spawnTrail($trail);
@@ -174,12 +175,8 @@ class LobbyPlayer extends CorePlayer {
 		));
 	}
 
-	public function isMorphed() {
-    	return isset($this->lobby->getMorph()->morphs[$this->getName()]);
-	}
-
-	public function getMorph() : string {
-    	return $this->lobby->getMorph()->morphs[$this->getName()];
+	public function getMorph() : ?string {
+    	return $this->lobby->getMorph()->morphs[$this->getName()] ?? null;
 	}
 
 	public function morph(int $id) {
