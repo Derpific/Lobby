@@ -16,11 +16,11 @@ use lobby\item\{
 
 use lobby\trails\Trail;
 
-use core\mcpe\form\{
+use form\{
 	MenuForm,
 	CustomForm
 };
-use core\mcpe\form\element\{
+use form\element\{
 	Button,
 	Image,
 	Label
