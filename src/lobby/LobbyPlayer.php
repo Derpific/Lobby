@@ -18,7 +18,8 @@ use lobby\trails\Trail;
 
 use form\{
 	MenuForm,
-	CustomForm
+	CustomForm,
+	CustomFormResponse
 };
 use form\element\{
 	Button,
