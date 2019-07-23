@@ -45,10 +45,12 @@ class LobbyListener implements Listener {
         $player = $event->getPlayer();
 
         if($player instanceof LobbyPlayer) {
-            if($event->getCause() === PlayerExhaustEvent::CAUSE_JUMPING or $event->getCause() === PlayerExhaustEvent::CAUSE_SPRINT_JUMPING) {
-                $player->doubleJump = time();
-                $player->setAllowFlight(true);
-            }
+			if(!$player->flying()) {
+				if($event->getCause() === PlayerExhaustEvent::CAUSE_JUMPING or $event->getCause() === PlayerExhaustEvent::CAUSE_SPRINT_JUMPING) {
+					$player->doubleJump = time();
+					$player->setAllowFlight(true);
+				}
+			}
         }
     }
 
@@ -92,16 +94,18 @@ class LobbyListener implements Listener {
             $event->setCancelled();
 
             if($player instanceof LobbyPlayer) {
-                if(($player->doubleJump - time()) <= 2) {
-                    $player->doubleJump = null;
+				if(!$player->flying()) {
+					if(($player->doubleJump - time()) <= 2) {
+						$player->doubleJump = null;
 
-                    $player->setAllowFlight(false);
+						$player->setAllowFlight(false);
 
-                    $directionVector = $player->getDirectionVector()->multiply(2);
-                    $directionVector->y = 1.1;
+						$directionVector = $player->getDirectionVector()->multiply(2);
+						$directionVector->y = 1.1;
 
-                    $player->setMotion($directionVector);
-                    $player->setGamemode(0);
+						$player->setMotion($directionVector);
+						$player->setGamemode(0);
+					}
                 }
             }
         }
