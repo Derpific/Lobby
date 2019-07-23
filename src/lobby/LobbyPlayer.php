@@ -7,6 +7,8 @@ namespace lobby;
 use core\Core;
 use core\CorePlayer;
 
+use core\utils\Entity;
+
 use lobby\item\{
     ServerSelector,
     Profile,
@@ -37,8 +39,7 @@ use pocketmine\network\mcpe\protocol\{
 
 use pocketmine\entity\{
 	EffectInstance,
-	Effect,
-	Entity
+	Effect
 };
 
 use pocketmine\utils\TextFormat;
@@ -232,7 +233,7 @@ class LobbyPlayer extends CorePlayer {
 		$y2 = $y + 0.5;
 		$y3 = $y2 + 1.4;
 
-		$this->getLevel()->addParticle($this->lobby->getTrails()->convertTrail($this->getTrail()->getName(), new Position($this->x, mt_rand($y, rand($y2, $y3)), $this->z)));
+		$this->getLevel()->addParticle(Entity::getParticle($this->getTrail()->getName(), new Position($this->x, mt_rand($y, rand($y2, $y3)), $this->z)));
 	}
 
 	public function despawnTrail() {
@@ -264,7 +265,7 @@ class LobbyPlayer extends CorePlayer {
 				$y2 = $y + 0.5;
 				$y3 = $y2 + 1.4;
 
-				$this->getLevel()->addParticle($this->lobby->getTrails()->convertTrail($trail, new Position($this->x, mt_rand($y, rand($y2, $y3)), $this->z)));
+				$this->getLevel()->addParticle(Entity::getParticle($trail, new Position($this->x, mt_rand($y, rand($y2, $y3)), $this->z)));
 				$this->trail = $this->lobby->getTrails()->getTrail($trail);
 			}
 		}
