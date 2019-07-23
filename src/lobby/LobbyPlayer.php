@@ -62,20 +62,22 @@ class LobbyPlayer extends CorePlayer {
     }
 
     public function joinLobby() {
-        $this->getLevel()->setTime(5000);
-        $this->getLevel()->stopTime();
-        $this->addEffect(new EffectInstance(Effect::getEffect(Effect::SPEED), 9999999, 1, false));
-        $this->getInventory()->clearAll();
-        $this->getInventory()->setItem(1, new ServerSelector());
-        $this->getInventory()->setItem(3, new Profile());
-        $this->getInventory()->setItem(5, new Cosmetics());
-        $this->getInventory()->setItem(7, new Gadgets());
+		if($this->isOnline()) {
+			$this->getLevel()->setTime(5000);
+			$this->getLevel()->stopTime();
+			$this->addEffect(new EffectInstance(Effect::getEffect(Effect::SPEED), 9999999, 1, false));
+			$this->getInventory()->clearAll();
+			$this->getInventory()->setItem(1, new ServerSelector());
+			$this->getInventory()->setItem(3, new Profile());
+			$this->getInventory()->setItem(5, new Cosmetics());
+			$this->getInventory()->setItem(7, new Gadgets());
+		}
     }
 
     public function leaveLobby() {
     	$this->despawnTrail();
 
-		if(is_null($this->getMorph())) {
+		if(!is_null($this->getMorph())) {
 			$this->removeMorph();
 		}
 	}
@@ -178,7 +180,7 @@ class LobbyPlayer extends CorePlayer {
 	public function getMorph() : ?string {
     	return $this->lobby->getMorph()->morphs[$this->getName()] ?? null;
 	}
-
+	
 	public function morph(int $id) {
 		$pk = new AddActorPacket();
 		$pk->entityRuntimeId = Entity::$entityCount++;
@@ -193,7 +195,9 @@ class LobbyPlayer extends CorePlayer {
 
 	public function moveMorph() {
 		$pk = new MoveActorAbsolutePacket();
-		$pk->entityRuntimeId = array_key_last($this->lobby->getMorph()->morphs[$this->getName()]);
+		$array = end($this->lobby->getMorph()->morphs[$this->getName()]);
+		$key = key($array);
+		$pk->entityRuntimeId = $key;
 		$pk->position = $this->asVector3()->subtract(0, 0.4, 0);
 		$pk->xRot = $this->pitch;
 		$pk->yRot = $this->yaw;
@@ -205,9 +209,11 @@ class LobbyPlayer extends CorePlayer {
 
 	public function removeMorph() {
 		$pk = new RemoveActorPacket();
-		$pk->entityRuntimeId = array_key_last($this->lobby->getMorph()->morphs[$this->getName()]);
+		$array = end($this->lobby->getMorph()->morphs[$this->getName()]);
+		$key = key($array);
+		$pk->entityRuntimeId = $key;
 
-		unset($this->lobby->getMorph()->morphs[$this->getName()]);
+		unset($array);
 		$this->setInvisible(false);
 		$this->sendDataPacket($pk);
 		$this->getServer()->broadcastPacket($this->getServer()->getOnlinePlayers(), $pk);
