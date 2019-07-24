@@ -6,10 +6,6 @@ namespace lobby;
 
 use core\Core;
 
-use core\utils\CustomItem;
-
-use core\mcpe\network\InventoryTransactionPacket;
-
 use core\stats\rank\Rank;
 
 use pocketmine\event\Listener;
@@ -19,16 +15,12 @@ use pocketmine\event\player\{
     PlayerInteractEvent,
     PlayerJoinEvent,
     PlayerToggleFlightEvent,
-	PlayerMoveEvent,
 	PlayerQuitEvent
 };
 use pocketmine\event\entity\{
     EntityDamageEvent,
     EntityDamageByEntityEvent
 };
-use pocketmine\event\server\DataPacketReceiveEvent;
-
-use pocketmine\nbt\tag\CompoundTag;
 
 class LobbyListener implements Listener {
     private $lobby;
@@ -111,16 +103,6 @@ class LobbyListener implements Listener {
         }
     }
 
-	public function onPlayerMoveEvents(PlayerMoveEvent $event) {
-		$player = $event->getPlayer();
-
-		if($player instanceof LobbyPlayer) {
-			if(!is_null($player->getMorph())) {
-				$player->moveMorph();
-			}
-		}
-	}
-
 	public function onPlayerQuitEvents(PlayerQuitEvent $event) {
 		$player = $event->getPlayer();
 
@@ -150,27 +132,4 @@ class LobbyListener implements Listener {
             }
         }
     }
-
-    public function onDataPacketReceiveEvents(DataPacketReceiveEvent $event) {
-    	$pk = $event->getPacket();
-    	$player = $event->getPlayer();
-
-    	if($player instanceof LobbyPlayer) {
-			if($pk instanceof InventoryTransactionPacket) {
-				if($pk->transactionType === InventoryTransactionPacket::TYPE_USE_ITEM_ON_ENTITY && $pk->trData->actionType === InventoryTransactionPacket::USE_ITEM_ON_ENTITY_ACTION_INTERACT) {
-					$entity = $pk->trData;
-
-					foreach($this->lobby->getServer()->getOnlinePlayers() as $onlinePlayer) {
-						if($onlinePlayer instanceof LobbyPlayer) {
-							if(!is_null($onlinePlayer->getMorph())) {
-								if($onlinePlayer->getMorph()[2] === $entity->entityRuntimeId) {
-									return;
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-	}
 }
