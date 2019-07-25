@@ -167,6 +167,7 @@ class LobbyPlayer extends CorePlayer {
 								$player->sendMessage(Lobby::getInstance()->getPrefix() . "Removed your old Trail");
 							}
 							$player->spawnTrail($trail);
+							$player->updateTrail();
 							$player->sendMessage(Lobby::getInstance()->getPrefix() . "Applied the Trail: " . $trail->getName());
 						}
 					}
