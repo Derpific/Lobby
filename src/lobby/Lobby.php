@@ -38,6 +38,10 @@ class Lobby extends PluginBase {
     }
 
     public function onEnable() {
+    	if(!$this->getServer()->getPluginManager()->isPluginEnabled(Core::getInstance())) {
+			$this->getServer()->getLogger()->error(Core::getInstance()->getErrorPrefix() . "Core was not Enabled.");
+			$this->getServer()->shutdown();
+		}
     	$this->morph = new Morph($this);
 		$this->parkour = new Parkour($this);
         $this->trails = new Trails($this);

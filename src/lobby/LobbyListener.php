@@ -118,10 +118,10 @@ class LobbyListener implements Listener {
 
             if($victim instanceof LobbyPlayer and $damager instanceof LobbyPlayer) {
                 if($victim->getCoreUser()->getRank()->getValue() === Rank::STAFF) {
-                    if(!$damager->hasPermission("lobby.essential.staffpuncher")) {
+                    if(!$damager->hasPermission("lobby.essentials.staffpuncher")) {
                         $damager->sendMessage(Core::getInstance()->getErrorPrefix() . "You don't have permission to Punch a Staff!");
 					}
-					if(!$victim->hasPermission("lobby.essential.staffpuncher.exempt")) {
+					if(!$victim->hasPermission("lobby.essentials.staffpuncher.exempt")) {
                         $damager->sendMessage(Core::getInstance()->getErrorPrefix() . "This Staff is special. Can't punch him today!");
                     } else {
                         $victim->knockBack($victim, 0, 6, 0, 1);
