@@ -82,11 +82,11 @@ class LobbyListener implements Listener {
     public function onPlayerToggleFlightEvents(PlayerToggleFlightEvent $event) {
         $player = $event->getPlayer();
 
-        if($player->isSurvival()) {
-            $event->setCancelled();
-
+        if($player->isSurvival()) {    
             if($player instanceof LobbyPlayer) {
 				if(!$player->flying()) {
+					$event->setCancelled();
+					 
 					if(($player->doubleJump - time()) <= 2) {
 						$player->doubleJump = null;
 
