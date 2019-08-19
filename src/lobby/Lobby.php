@@ -14,6 +14,7 @@ use lobby\item\{
 };
 use lobby\morph\Morph;
 use lobby\parkour\Parkour;
+use lobby\stacker\Stacker;
 use lobby\trails\Trails;
 
 use pocketmine\plugin\PluginBase;
@@ -28,6 +29,7 @@ class Lobby extends PluginBase {
     private $morph;
     private $trails;
     private $parkour;
+    private $stacker;
 
     const PREFIX = TextFormat::GREEN . "Lobby> " . TextFormat::GRAY;
 
@@ -44,12 +46,13 @@ class Lobby extends PluginBase {
 		}
     	$this->morph = new Morph($this);
 		$this->parkour = new Parkour($this);
-        $this->trails = new Trails($this);
+		$this->stacker = new Stacker($this);
+		$this->trails = new Trails($this);
 
-        ItemBlock::addCreativeItem(new Cosmetics());
-        ItemBlock::addCreativeItem(new Gadgets());
-        ItemBlock::addCreativeItem(new Profile());
-        ItemBlock::addCreativeItem(new ServerSelector());
+		ItemBlock::addCreativeItem(new Cosmetics());
+		ItemBlock::addCreativeItem(new Gadgets());
+		ItemBlock::addCreativeItem(new Profile());
+		ItemBlock::addCreativeItem(new ServerSelector());
 		$this->getServer()->getLogger()->notice($this->getPrefix() . "Lobby Enabled");
 		$this->getServer()->getPluginManager()->registerEvents(new LobbyListener($this), $this);
     }
@@ -64,6 +67,10 @@ class Lobby extends PluginBase {
 
 	public function getParkour() : Parkour {
 		return $this->parkour;
+	}
+
+	public function getStacker() : Stacker {
+		return $this->stacker;
 	}
 
     public function getTrails() : Trails {

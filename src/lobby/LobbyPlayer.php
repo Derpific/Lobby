@@ -56,7 +56,7 @@ class LobbyPlayer extends CorePlayer {
 	 */
     public $trail = null;
 
-    public $doubleJump = [];
+    public $doubleJump = [], $morph = [];
 
     public function setLobby(Lobby $lobby) {
         $this->lobby = $lobby;
@@ -89,8 +89,13 @@ class LobbyPlayer extends CorePlayer {
 
 		$b1->setId(1);
 
+		$b2 = new Button(TextFormat::GRAY . "Morphs");
+
+		$b2->setId(2);
+
 		$options = [
-			$b1
+			$b1,
+			$b2
 		];
 
 		$this->sendForm(new MenuForm(TextFormat::GOLD . "Cosmetics", TextFormat::LIGHT_PURPLE . "Select a Cosmetic!", $options,
@@ -98,8 +103,13 @@ class LobbyPlayer extends CorePlayer {
 				if($player instanceof LobbyPlayer) {
 					switch($selectedOption->getId()) {
 						case 1:
-							if($player->hasPermission("lobby.trails.use")) {
+							if($player->hasPermission("lobby.trail.command")) {
 								$player->sendTrailsForm();
+							}
+						break;
+						case 2:
+							if($player->hasPermission("lobby.morph.command")) {
+								$player->sendMorphsForm();
 							}
 						break;
 					}
@@ -179,8 +189,47 @@ class LobbyPlayer extends CorePlayer {
 		));
 	}
 
+	public function sendMorphsForm() {
+		$options = [];
+
+		foreach(Core::getInstance()->getMCPE()->getRegisteredEntities() as $entity) {
+			$b = new Button(TextFormat::GRAY . $entity->getName()); //img online
+
+			$b->setId($entity->getName());
+
+			$options[] = $b;
+		}
+		$this->sendForm(new MenuForm(TextFormat::GOLD . "Morphs", TextFormat::LIGHT_PURPLE . "Select a Morph!", $options,
+			function(Player $player, Button $button) : void {
+				if($player instanceof LobbyPlayer) {
+					$trail = Lobby::getInstance()->getTrails()->getTrail($button->getId());
+
+					if($trail instanceof Trail) {
+						if(!$player->hasPermission("lobby.morphs." . $trail->getName())) {
+							$player->sendMessage(Core::getInstance()->getErrorPrefix() . "You do not have Permission to use this Trail");
+						}
+						if(!is_null($player->getTrail()) && $player->getTrail()->getName() === $trail->getName()) {
+							$player->sendMessage(Core::getInstance()->getErrorPrefix() . "You already have the Trail " . $trail->getName() . " Applied");
+						} else {
+							if(!is_null($player->getTrail())) {
+								$player->despawnTrail();
+								$player->sendMessage(Lobby::getInstance()->getPrefix() . "Removed your old Trail");
+							}
+							$player->spawnTrail($trail);
+							$player->updateTrail();
+							$player->sendMessage(Lobby::getInstance()->getPrefix() . "Applied the Trail: " . $trail->getName());
+						}
+					}
+				}
+			},
+			function(Player $player) : void {
+				$player->sendMessage(Lobby::getInstance()->getPrefix() . "Closed Trails menu");
+			}
+		));
+	}
+
 	public function getMorph() : ?string {
-    	return $this->lobby->getMorph()->morphs[$this->getName()] ?? null;
+    	return $this->morph[1] ?? null;
 	}
 	
 	public function morph(int $id) {
@@ -189,7 +238,7 @@ class LobbyPlayer extends CorePlayer {
 		$pk->type = $id;
 		$pk->position = $this->getPosition();
 
-		$this->lobby->getMorph()->morphs[$this->getName()][$id] = $pk->entityRuntimeId;
+		$this->morph[$id] = $pk->entityRuntimeId;
 		$this->setInvisible(true);
 		$this->sendDataPacket($pk);
 		$this->getServer()->broadcastPacket($this->getServer()->getOnlinePlayers(), $pk);
@@ -197,7 +246,7 @@ class LobbyPlayer extends CorePlayer {
 
 	public function moveMorph() {
 		$pk = new MoveActorAbsolutePacket();
-		$array = end($this->lobby->getMorph()->morphs[$this->getName()]);
+		$array = end($this->morph);
 		$key = key($array);
 		$pk->entityRuntimeId = $key;
 		$pk->position = $this->asVector3()->subtract(0, 0.4, 0);
@@ -211,7 +260,7 @@ class LobbyPlayer extends CorePlayer {
 
 	public function removeMorph() {
 		$pk = new RemoveActorPacket();
-		$array = end($this->lobby->getMorph()->morphs[$this->getName()]);
+		$array = end($this->morph);
 		$key = key($array);
 		$pk->entityRuntimeId = $key;
 

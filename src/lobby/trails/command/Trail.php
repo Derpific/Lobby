@@ -21,7 +21,7 @@ class Trail extends PluginCommand {
 		$this->lobby = $lobby;
 
 		$this->setPermission("lobby.trail.command");
-		$this->setUsage("<entity> [value] [player]");
+		$this->setUsage("<trail : off : list> [player]");
 		$this->setDescription("Set a Hud Type on or Off");
 	}
 
