@@ -70,7 +70,7 @@ class Trails implements Data {
         return $this->trails;
     }
 	
-	public function getTrail(string $trail) : ?Trail {
+	public function get(string $trail) : ?Trail {
         $lowerKeys = array_change_key_case($this->trails, CASE_LOWER);
 
         if(isset($lowerKeys[strtolower($trail)])) {
