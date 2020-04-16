@@ -81,7 +81,7 @@ class Morph extends PluginCommand {
 		if(!$sender instanceof LobbyPlayer && strtolower($args[0]) !== "list") {
 			$sender->sendMessage(Core::getInstance()->getErrorPrefix() . "You must be a Player to use this Command");
 			return false;
-		} else {
+		} else if($sender instanceof LobbyPlayer && strtolower($args[0]) !== "list") {
 			if(strtolower($args[0]) === "off") {
 				if(is_null($sender->getMorph())) {
 					$sender->sendMessage(Core::getInstance()->getErrorPrefix() . "You are not Morphed");
