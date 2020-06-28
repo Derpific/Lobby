@@ -46,7 +46,7 @@ class Morph extends PluginCommand {
 			$types = [];
 
 			foreach(Core::getInstance()->getMCPE()->getRegisteredEntities() as $entity) {
-				$types[] = $entity->getName();
+				$types[] = $entity->getNameTag();
 			}
 			$sender->sendMessage($this->lobby->getPrefix() . "Types of Morphs: " . implode(", ", $types));
 		}
