@@ -117,7 +117,7 @@ class LobbyPlayer extends CorePlayer {
 				}
 			},
 			function(Player $player) : void {
-				$player->sendMessage(Lobby::getInstance()->getPrefix() . "Closed Cosmetics menu");
+				$player->sendMessage(Lobby::PREFIX . "Closed Cosmetics menu");
 			}
 		));
 	}
@@ -137,7 +137,7 @@ class LobbyPlayer extends CorePlayer {
 
 			},
 			function(Player $player) : void {
-				$player->sendMessage(Lobby::getInstance()->getPrefix() . "Closed Gadgets menu");
+				$player->sendMessage(Lobby::PREFIX . "Closed Gadgets menu");
 			}
 		));
 	}
@@ -174,31 +174,31 @@ class LobbyPlayer extends CorePlayer {
 
 					if($trail instanceof Trail) {
 						if(!$player->hasPermission("lobby.trails." . $trail->getName())) {
-							$player->sendMessage(Core::getInstance()->getErrorPrefix() . "You do not have Permission to use this Trail");
+							$player->sendMessage(Core::ERROR_PREFIX . "You do not have Permission to use this Trail");
 						}
 						if(!is_null($player->getTrail()) && $player->getTrail()->getName() === $trail->getName()) {
-							$player->sendMessage(Core::getInstance()->getErrorPrefix() . "You already have the Trail " . $trail->getName() . " Applied");						
+							$player->sendMessage(Core::ERROR_PREFIX . "You already have the Trail " . $trail->getName() . " Applied");
 						} else {
 							if($button->getId() === "off") {
 								if(!$player->getTrail() instanceof Trail) {
-									$player->sendMessage(Core::getInstance()->getErrorPrefix() . "You do not have a Trail applied");
+									$player->sendMessage(Core::ERROR_PREFIX . "You do not have a Trail applied");
 								}
 								$player->removeTrail();
-								$player->sendMessage(Lobby::getInstance()->getPrefix() . "Removed your Trail");
+								$player->sendMessage(Lobby::PREFIX . "Removed your Trail");
 							}
 							if(!$player->getTrail() instanceof Trail) {
 								$player->removeTrail();
-								$player->sendMessage(Lobby::getInstance()->getPrefix() . "Removed your Old Trail");
+								$player->sendMessage(Lobby::PREFIX . "Removed your Old Trail");
 							}
 							$player->spawnTrail($trail);
 							$player->updateTrail();
-							$player->sendMessage(Lobby::getInstance()->getPrefix() . "Applied the Trail: " . $trail->getName());
+							$player->sendMessage(Lobby::PREFIX . "Applied the Trail: " . $trail->getName());
 						}
 					}
 				}
 			},
 			function(Player $player) : void {
-				$player->sendMessage(Lobby::getInstance()->getPrefix() . "Closed Trails menu");
+				$player->sendMessage(Lobby::PREFIX . "Closed Trails menu");
 			}
 		));
 	}
@@ -211,43 +211,43 @@ class LobbyPlayer extends CorePlayer {
 		$b->setId("off");
 
 		$options[] = $b;
-
+		/**
 		foreach(Core::getInstance()->getMCPE()->getRegisteredEntities() as $entity) {
 			$b2 = new Button(TextFormat::GRAY . $entity->getName(), new Image("", Image::TYPE_URL));
 
 			$b2->setId($entity->getName());
 
 			$options[] = $b2;
-		}
+		}*/
 		$this->sendForm(new MenuForm(TextFormat::GOLD . "Morphs", TextFormat::LIGHT_PURPLE . "Select a Morph!", $options,
 			function(Player $player, Button $button) : void {
 				if($player instanceof LobbyPlayer) {
 					$morph = $button->getId();
 
 					if(!$player->hasPermission("lobby.morphs." . $morph)) {
-						$player->sendMessage(Core::getInstance()->getErrorPrefix() . "You do not have Permission to use this Trail");
+						$player->sendMessage(Core::ERROR_PREFIX . "You do not have Permission to use this Trail");
 					}
 					if(!is_null($player->getMorph()) && $player->getMorph() === $morph) {
-						$player->sendMessage(Core::getInstance()->getErrorPrefix() . "You are already Morphed into a " . $morph);
+						$player->sendMessage(Core::ERROR_PREFIX . "You are already Morphed into a " . $morph);
 					} else {
 						if($button->getId() === "off") {
 							if(is_null($player->getMorph())) {
-								$player->sendMessage(Core::getInstance()->getErrorPrefix() . "You do not have a Morph applied");
+								$player->sendMessage(Core::ERROR_PREFIX . "You do not have a Morph applied");
 							}
 							$player->removeMorph();
-							$player->sendMessage(Lobby::getInstance()->getPrefix() . "Removed your Morph");
+							$player->sendMessage(Lobby::PREFIX . "Removed your Morph");
 						}
 						if(!is_null($player->getMorph())) {
 							$player->removeMorph();
-							$player->sendMessage(Lobby::getInstance()->getPrefix() . "Removed your Old Morph");
+							$player->sendMessage(Lobby::PREFIX . "Removed your Old Morph");
 						}
 						$player->morph(Entity::nameToId($morph));
-						$player->sendMessage(Lobby::getInstance()->getPrefix() . "Morphed into a(n) " . $morph->getName());
+						$player->sendMessage(Lobby::PREFIX . "Morphed into a(n) " . $morph->getName());
 					}
 				}
 			},
 			function(Player $player) : void {
-				$player->sendMessage(Lobby::getInstance()->getPrefix() . "Closed Morph menu");
+				$player->sendMessage(Lobby::PREFIX . "Closed Morph menu");
 			}
 		));
 	}

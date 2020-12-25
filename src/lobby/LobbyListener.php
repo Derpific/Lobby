@@ -53,19 +53,19 @@ class LobbyListener implements Listener {
 		if($player instanceof LobbyPlayer) {
 			if($item->getNamedTagEntry("Cosmetics")) {
 				$player->sendCosmeticsForm();
-				$player->sendMessage($this->lobby->getPrefix() . "Opened Cosmetics menu");
+				$player->sendMessage($this->lobby::PREFIX . "Opened Cosmetics menu");
 			}
 			if($item->getNamedTagEntry("Gadgets")) {
 				$player->sendGadgetsForm();
-				$player->sendMessage($this->lobby->getPrefix() . "Opened Gadgets menu");
+				$player->sendMessage($this->lobby::PREFIX . "Opened Gadgets menu");
 			}
 			if($item->getNamedTagEntry("Profile")) {
 				$player->sendProfileForm();
-				$player->sendMessage($this->lobby->getPrefix() . "Opened Profile menu");
+				$player->sendMessage($this->lobby::PREFIX . "Opened Profile menu");
 			}
 			if($item->getNamedTagEntry("Server Selector")) {
 				$player->sendServerSelectorForm();
-				$player->sendMessage($this->lobby->getPrefix() . "Opened Servers menu");
+				$player->sendMessage($this->lobby::PREFIX . "Opened Servers menu");
 			}
 		}
     }
@@ -119,14 +119,14 @@ class LobbyListener implements Listener {
             if($victim instanceof LobbyPlayer and $damager instanceof LobbyPlayer) {
                 if($victim->getCoreUser()->getRank()->getValue() === Rank::STAFF) {
                     if(!$damager->hasPermission("lobby.essentials.staffpuncher")) {
-                        $damager->sendMessage(Core::getInstance()->getErrorPrefix() . "You don't have permission to Punch a Staff!");
+                        $damager->sendMessage(Core::ERROR_PREFIX . "You don't have permission to Punch a Staff!");
 					}
 					if(!$victim->hasPermission("lobby.essentials.staffpuncher.exempt")) {
-                        $damager->sendMessage(Core::getInstance()->getErrorPrefix() . "This Staff is special. Can't punch him today!");
+                        $damager->sendMessage(Core::ERROR_PREFIX . "This Staff is special. Can't punch him today!");
                     } else {
                         $victim->knockBack($victim, 0, 6, 0, 1);
-                        $victim->sendMessage(Core::getInstance()->getPrefix() . $damager->getName() . " Punched you! Staff disadvantages..");
-                        $damager->sendMessage(Core::getInstance()->getPrefix() . "You punched " . $victim->getName() . "! Take that Staff!");
+                        $victim->sendMessage(Core::PREFIX . $damager->getName() . " Punched you! Staff disadvantages..");
+                        $damager->sendMessage(Core::PREFIX . "You punched " . $victim->getName() . "! Take that Staff!");
                     }
                 }
             }

@@ -6,13 +6,19 @@ namespace lobby\morph;
 
 use lobby\Lobby;
 
-class Morph {
-	private $lobby;
+use core\utils\Manager;
 
-	public function __construct(Lobby $lobby) {
-		$this->lobby = $lobby;
+class Morph extends Manager {
+	public static $instance = null;
 
-		$lobby->getServer()->getCommandMap()->register(\lobby\morph\command\Morph::class, new \lobby\morph\command\Morph($this->lobby));
-		$lobby->getServer()->getPluginManager()->registerEvents(new MorphListener($lobby), $lobby);
+	public function init() {
+		self::$instance = $this;
+
+		//$this->registerCommand(\lobby\morph\command\Morph::class, new \lobby\morph\command\Morph($this));
+		$this->registerListener(new MorphListener($this), Lobby::getInstance());
+	}
+
+	public static function getInstance() : self {
+		return self::$instance;
 	}
 }

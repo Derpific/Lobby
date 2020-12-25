@@ -36,24 +36,24 @@ class Lobby extends PluginBase {
     public function onLoad() {
         self::$instance = $this;
 		
-		$this->getServer()->getNetwork()->setName(TextFormat::BOLD . Core::getInstance()->getPrefix() . TextFormat::GREEN . "Lobby");
+		$this->getServer()->getNetwork()->setName(TextFormat::BOLD . Core::PREFIX . TextFormat::GREEN . "Lobby");
     }
 
     public function onEnable() {
     	if(!$this->getServer()->getPluginManager()->isPluginEnabled(Core::getInstance())) {
-			$this->getServer()->getLogger()->error(Core::getInstance()->getErrorPrefix() . "Core was not Enabled.");
+			$this->getServer()->getLogger()->error(Core::ERROR_PREFIX . "Core was not Enabled.");
 			$this->getServer()->shutdown();
 		}
-    	$this->morph = new Morph($this);
-		$this->parkour = new Parkour($this);
-		$this->stacker = new Stacker($this);
-		$this->trails = new Trails($this);
+    	$this->morph = new Morph();
+		$this->parkour = new Parkour();
+		$this->stacker = new Stacker();
+		$this->trails = new Trails();
 
 		ItemBlock::addCreativeItem(new Cosmetics());
 		ItemBlock::addCreativeItem(new Gadgets());
 		ItemBlock::addCreativeItem(new Profile());
 		ItemBlock::addCreativeItem(new ServerSelector());
-		$this->getServer()->getLogger()->notice($this->getPrefix() . "Lobby Enabled");
+		$this->getServer()->getLogger()->notice(self::PREFIX . "Lobby Enabled");
 		$this->getServer()->getPluginManager()->registerEvents(new LobbyListener($this), $this);
     }
 
@@ -77,11 +77,7 @@ class Lobby extends PluginBase {
         return $this->trails;
     }
 
-    public function getPrefix() : string {
-        return self::PREFIX;
-    }
-
     public function onDisable() {
-        $this->getServer()->getLogger()->notice($this->getPrefix() . "Lobby Disabled");
+        $this->getServer()->getLogger()->notice(self::PREFIX . "Lobby Disabled");
     }
 }

@@ -4,60 +4,32 @@ declare(strict_types = 1);
 
 namespace lobby\trails;
 
-use lobby\Lobby;
 use lobby\LobbyPlayer;
 
-use pocketmine\item\Item;
+use core\utils\Manager;
 
-use pocketmine\block\Block;
+use pocketmine\Server;
 
-use pocketmine\level\Position;
-use pocketmine\level\particle\{
-    Particle,
-    ExplodeParticle,
-    HugeExplodeParticle,
-    BubbleParticle,
-    SplashParticle,
-    WaterParticle,
-    CriticalParticle,
-    EnchantParticle,
-    InstantEnchantParticle,
-    SmokeParticle,
-    WaterDripParticle,
-    LavaDripParticle,
-    SporeParticle,
-    PortalParticle,
-    EntityFlameParticle,
-    FlameParticle,
-    LavaParticle,
-    RedstoneParticle,
-    ItemBreakParticle,
-    HeartParticle,
-    InkParticle,
-    EnchantmentTableParticle,
-    HappyVillagerParticle,
-    AngryVillagerParticle,
-    RainSplashParticle,
-    TerrainParticle,
-    DestroyBlockParticle,
-	DustParticle,
-};
+class Trails extends Manager implements Data {
+	public static $instance = null;
 
-class Trails implements Data {
-    private $lobby;
-	
 	public $trails = [];
 
-    public function __construct(Lobby $lobby) {
-        $this->lobby = $lobby;
+    public function init() {
+    	self::$instance = $this;
 
         foreach(self::TRAILS as $trail) {
             $this->trails[$trail] = new Trail($trail, self::ICONS[$trail]);
         }
+        $this->registerCommand(\lobby\trails\command\Trail::class, new \lobby\trails\command\Trail($this));
     }
 
-    public function tick() {
-        foreach($this->lobby->getServer()->getOnlinePlayers() as $onlinePlayer) {
+    public static function getInstance() : self {
+		return self::$instance;
+	}
+
+	public function tick() {
+        foreach(Server::getInstance()->getOnlinePlayers() as $onlinePlayer) {
             if($onlinePlayer instanceof LobbyPlayer) {
             	if(!is_null($onlinePlayer->getTrail())) {
             		$onlinePlayer->updateTrail();
