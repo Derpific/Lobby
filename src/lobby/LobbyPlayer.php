@@ -85,8 +85,8 @@ class LobbyPlayer extends CorePlayer {
 	}
 
 	public function sendCosmeticsForm() {
-		//ToDo: Cosmetics (Armor, Dance)
-		$b1 = new Button(TextFormat::GRAY . "Trails");
+		//ToDo: Cosmetics (Armor, Emote, etc)
+		$b1 = new Button(TextFormat::GRAY . "TrailsManager");
 
 		$b1->setId(1);
 
@@ -144,7 +144,23 @@ class LobbyPlayer extends CorePlayer {
 
 	public function sendTrailsForm() {
 		$options = [];
+		$e1 = new Label(TextFormat::GRAY . "Coming Soon..");
 
+		$e1->setValue(1);
+
+		$elements = [
+			$e1
+		];
+
+		$this->sendForm(new CustomForm(TextFormat::GOLD . "TrailsManager", $elements,
+			function(Player $player, CustomFormResponse $response) : void {
+
+			},
+			function(Player $player) : void {
+				$player->sendMessage(Lobby::PREFIX . "Closed Gadgets menu");
+			}
+		));
+		/**
 		$b = new Button(TextFormat::RED . "Remove Trail");
 
 		$b->setId("off");
@@ -167,7 +183,7 @@ class LobbyPlayer extends CorePlayer {
 				$options[] = $b2;
 			}
 		}
-		$this->sendForm(new MenuForm(TextFormat::GOLD . "Trails", TextFormat::LIGHT_PURPLE . "Select a Trail!", $options,
+		$this->sendForm(new MenuForm(TextFormat::GOLD . "TrailsManager", TextFormat::LIGHT_PURPLE . "Select a Trail!", $options,
 			function(Player $player, Button $button) : void {
 				if($player instanceof LobbyPlayer) {
 					$trail = Lobby::getInstance()->getTrails()->get($button->getId());
@@ -198,28 +214,45 @@ class LobbyPlayer extends CorePlayer {
 				}
 			},
 			function(Player $player) : void {
-				$player->sendMessage(Lobby::PREFIX . "Closed Trails menu");
+				$player->sendMessage(Lobby::PREFIX . "Closed TrailsManager menu");
 			}
-		));
+		));*/
 	}
 
 	public function sendMorphsForm() {
 		$options = [];
+		$options = [];
+		$e1 = new Label(TextFormat::GRAY . "Coming Soon..");
 
-		$b = new Button(TextFormat::RED . "Remove Morph");
+		$e1->setValue(1);
+
+		$elements = [
+			$e1
+		];
+
+		$this->sendForm(new CustomForm(TextFormat::GOLD . "Morphs", $elements,
+			function(Player $player, CustomFormResponse $response) : void {
+
+			},
+			function(Player $player) : void {
+				$player->sendMessage(Lobby::PREFIX . "Closed Gadgets menu");
+			}
+		));
+		/**
+		$b = new Button(TextFormat::RED . "Remove MorphManager");
 
 		$b->setId("off");
 
 		$options[] = $b;
-		/**
+
 		foreach(Core::getInstance()->getMCPE()->getRegisteredEntities() as $entity) {
 			$b2 = new Button(TextFormat::GRAY . $entity->getName(), new Image("", Image::TYPE_URL));
 
 			$b2->setId($entity->getName());
 
 			$options[] = $b2;
-		}*/
-		$this->sendForm(new MenuForm(TextFormat::GOLD . "Morphs", TextFormat::LIGHT_PURPLE . "Select a Morph!", $options,
+		}
+		$this->sendForm(new MenuForm(TextFormat::GOLD . "Morphs", TextFormat::LIGHT_PURPLE . "Select a MorphManager!", $options,
 			function(Player $player, Button $button) : void {
 				if($player instanceof LobbyPlayer) {
 					$morph = $button->getId();
@@ -232,14 +265,14 @@ class LobbyPlayer extends CorePlayer {
 					} else {
 						if($button->getId() === "off") {
 							if(is_null($player->getMorph())) {
-								$player->sendMessage(Core::ERROR_PREFIX . "You do not have a Morph applied");
+								$player->sendMessage(Core::ERROR_PREFIX . "You do not have a MorphManager applied");
 							}
 							$player->removeMorph();
-							$player->sendMessage(Lobby::PREFIX . "Removed your Morph");
+							$player->sendMessage(Lobby::PREFIX . "Removed your MorphManager");
 						}
 						if(!is_null($player->getMorph())) {
 							$player->removeMorph();
-							$player->sendMessage(Lobby::PREFIX . "Removed your Old Morph");
+							$player->sendMessage(Lobby::PREFIX . "Removed your Old MorphManager");
 						}
 						$player->morph(Entity::nameToId($morph));
 						$player->sendMessage(Lobby::PREFIX . "Morphed into a(n) " . $morph->getName());
@@ -247,9 +280,9 @@ class LobbyPlayer extends CorePlayer {
 				}
 			},
 			function(Player $player) : void {
-				$player->sendMessage(Lobby::PREFIX . "Closed Morph menu");
+				$player->sendMessage(Lobby::PREFIX . "Closed MorphManager menu");
 			}
-		));
+		));*/
 	}
 
 	public function getMorph() : ?string {

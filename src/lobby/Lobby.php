@@ -12,10 +12,10 @@ use lobby\item\{
     Profile,
     ServerSelector
 };
-use lobby\morph\Morph;
-use lobby\parkour\Parkour;
-use lobby\stacker\Stacker;
-use lobby\trails\Trails;
+use lobby\morph\MorphManager;
+use lobby\parkour\ParkourManager;
+use lobby\stacker\StackerManager;
+use lobby\trails\TrailsManager;
 
 use pocketmine\plugin\PluginBase;
 
@@ -44,10 +44,10 @@ class Lobby extends PluginBase {
 			$this->getServer()->getLogger()->error(Core::ERROR_PREFIX . "Core was not Enabled.");
 			$this->getServer()->shutdown();
 		}
-    	$this->morph = new Morph();
-		$this->parkour = new Parkour();
-		$this->stacker = new Stacker();
-		$this->trails = new Trails();
+    	$this->morph = new MorphManager();
+		$this->parkour = new ParkourManager();
+		$this->stacker = new StackerManager();
+		$this->trails = new TrailsManager();
 
 		ItemBlock::addCreativeItem(new Cosmetics());
 		ItemBlock::addCreativeItem(new Gadgets());
@@ -61,19 +61,19 @@ class Lobby extends PluginBase {
         return self::$instance;
     }
 
-    public function getMorph() : Morph {
+    public function getMorph() : MorphManager {
     	return $this->morph;
 	}
 
-	public function getParkour() : Parkour {
+	public function getParkour() : ParkourManager {
 		return $this->parkour;
 	}
 
-	public function getStacker() : Stacker {
+	public function getStacker() : StackerManager {
 		return $this->stacker;
 	}
 
-    public function getTrails() : Trails {
+    public function getTrails() : TrailsManager {
         return $this->trails;
     }
 

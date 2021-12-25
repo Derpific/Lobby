@@ -2,18 +2,18 @@
 
 declare(strict_types = 1);
 
-namespace lobby\stacker;
+namespace lobby\parkour;
 //TODO
 use core\utils\Manager;
 
-class Stacker extends Manager {
+class ParkourManager extends Manager {
 	public static $instance = null;
 
-	public function init() {
+    public function init() {
 		self::$instance = $this;
 	}
 
 	public static function getInstance() : self {
-		return self::$instance;
+    	return self::$instance;
 	}
 }

@@ -8,13 +8,13 @@ use lobby\Lobby;
 
 use core\utils\Manager;
 
-class Morph extends Manager {
+class MorphManager extends Manager {
 	public static $instance = null;
 
 	public function init() {
 		self::$instance = $this;
 
-		//$this->registerCommand(\lobby\morph\command\Morph::class, new \lobby\morph\command\Morph($this));
+		//$this->registerCommand(\lobby\morph\command\MorphManager::class, new \lobby\morph\command\MorphManager($this));
 		$this->registerListener(new MorphListener($this), Lobby::getInstance());
 	}
 

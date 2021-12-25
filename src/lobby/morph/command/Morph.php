@@ -20,14 +20,14 @@ use pocketmine\Server;
 class Morph extends PluginCommand {
 	private $manager;
 
-	public function __construct(\lobby\morph\Morph $manager) {
+	public function __construct(\lobby\morph\MorphManager $manager) {
 		parent::__construct("morph", Lobby::getInstance());
 
 		$this->manager = $manager;
 
 		$this->setPermission("lobby.morph.command");
 		$this->setUsage("<entity : off : list> [player]");
-		$this->setDescription("Morph yourself or a Player into an Entity");
+		$this->setDescription("MorphManager yourself or a Player into an Entity");
 	}
 
 	public function execute(CommandSender $sender, string $commandLabel, array $args) : bool {
@@ -40,7 +40,7 @@ class Morph extends PluginCommand {
 			return false;
 		}
 		if(is_null(Entity::nameToId($args[0])) && strtolower($args[0]) !== "off" && strtolower($args[0]) !== "list") {
-			$sender->sendMessage(Core::ERROR_PREFIX . $args[0] . " is not a valid Morph");
+			$sender->sendMessage(Core::ERROR_PREFIX . $args[0] . " is not a valid MorphManager");
 			return false;
 		}
 		if(strtolower($args[0]) === "list") {
@@ -68,8 +68,8 @@ class Morph extends PluginCommand {
 						return false;
 					} else {
 						$player->removeMorph();
-						$sender->sendMessage(Lobby::PREFIX . "Removed " . $player->getName() . "'s Morph");
-						$player->sendMessage(Lobby::PREFIX . $sender->getName() . " Removed your Morph");
+						$sender->sendMessage(Lobby::PREFIX . "Removed " . $player->getName() . "'s MorphManager");
+						$player->sendMessage(Lobby::PREFIX . $sender->getName() . " Removed your MorphManager");
 						return true;
 					}
 				}
@@ -89,7 +89,7 @@ class Morph extends PluginCommand {
 					return false;
 				} else {
 					$sender->removeMorph();
-					$sender->sendMessage(Lobby::PREFIX . "Removed your Morph");
+					$sender->sendMessage(Lobby::PREFIX . "Removed your MorphManager");
 					return true;
 				}
 			}

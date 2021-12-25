@@ -9,7 +9,7 @@ use core\Core;
 use lobby\Lobby;
 use lobby\LobbyPlayer;
 
-use lobby\trails\Trails;
+use lobby\trails\TrailsManager;
 
 use pocketmine\command\{
 	PluginCommand,
@@ -20,7 +20,7 @@ use pocketmine\Server;
 class Trail extends PluginCommand {
 	private $manager;
 
-	public function __construct(Trails $manager) {
+	public function __construct(TrailsManager $manager) {
 		parent::__construct("trail", Lobby::getInstance());
 
 		$this->manager = $manager;
@@ -51,7 +51,7 @@ class Trail extends PluginCommand {
 					$types[] = $trail->getName();
 				}
 			}
-			$sender->sendMessage(Lobby::PREFIX . "Types of Trails: " . implode(", ", $types));
+			$sender->sendMessage(Lobby::PREFIX . "Types of TrailsManager: " . implode(", ", $types));
 		}
 		if(isset($args[1])) {
 			if(!$sender->hasPermission($this->getPermission() . ".other")) {

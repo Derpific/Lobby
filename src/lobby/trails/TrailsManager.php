@@ -10,7 +10,7 @@ use core\utils\Manager;
 
 use pocketmine\Server;
 
-class Trails extends Manager implements Data {
+class TrailsManager extends Manager implements Data {
 	public static $instance = null;
 
 	public $trails = [];
@@ -38,11 +38,11 @@ class Trails extends Manager implements Data {
         }
     }
 
-	public function getAll() : array {
+	public function getAllTrails() : array {
         return $this->trails;
     }
 	
-	public function get(string $trail) : ?Trail {
+	public function getTrail(string $trail) : ?Trail {
         $lowerKeys = array_change_key_case($this->trails, CASE_LOWER);
 
         if(isset($lowerKeys[strtolower($trail)])) {

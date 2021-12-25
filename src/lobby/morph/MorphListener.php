@@ -19,7 +19,7 @@ use pocketmine\Server;
 class MorphListener implements Listener {
 	private $manager;
 
-	public function __construct(Morph $manager) {
+	public function __construct(MorphManager $manager) {
 		$this->manager = $manager;
 	}
 
