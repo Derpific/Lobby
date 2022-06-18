@@ -1,6 +1,6 @@
 name: Lobby
 main: lobby\Lobby
-author: Derpific
+author: Rxchi
 version: 1.0
-api: 3.6.5
+api: 4.0.0
 depend: [Core]

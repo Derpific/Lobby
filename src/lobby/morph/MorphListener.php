@@ -35,7 +35,7 @@ class MorphListener implements Listener {
 
 	public function onDataPacketReceiveEvents(DataPacketReceiveEvent $event) {
 		$pk = $event->getPacket();
-		$player = $event->getPlayer();
+		$player = $event->getOrigin();
 
 		if($player instanceof LobbyPlayer) {
 			if($pk instanceof InventoryTransactionPacket) {

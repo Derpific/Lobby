@@ -6,19 +6,22 @@ namespace lobby\morph\command;
 
 use core\Core;
 
+use CortexPE\Commando\BaseCommand;
+
 use lobby\Lobby;
 use lobby\LobbyPlayer;
 
-use core\utils\Entity;
+use core\utils\EntityUtils;
 
-use pocketmine\command\{
-	PluginCommand,
-	CommandSender
-};
+use pocketmine\command\CommandSender;
 use pocketmine\Server;
 
-class Morph extends PluginCommand {
+class Morph extends BaseCommand {
 	private $manager;
+
+	public function prepare() : void {
+		// TODO: Implement prepare() method.
+	}
 
 	public function __construct(\lobby\morph\MorphManager $manager) {
 		parent::__construct("morph", Lobby::getInstance());

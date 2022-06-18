@@ -2,33 +2,32 @@
 
 declare(strict_types = 1);
 
-namespace lobby;
+namespace lobby\player;
 
 use core\Core;
 
-use core\stats\rank\Rank;
+use core\player\rank\Rank;
 
 use pocketmine\event\Listener;
+
 use pocketmine\event\player\{
     PlayerCreationEvent,
     PlayerExhaustEvent,
     PlayerInteractEvent,
     PlayerJoinEvent,
     PlayerToggleFlightEvent,
-	PlayerQuitEvent
+	PlayerQuitEvent,
+	PlayerMoveEvent
 };
+
 use pocketmine\event\entity\{
     EntityDamageEvent,
     EntityDamageByEntityEvent
 };
 
-class LobbyListener implements Listener {
-    private $lobby;
+use pocketmine\player\GameMode;
 
-    public function __construct(Lobby $lobby) {
-        $this->lobby = $lobby;
-    }
-
+class PlayerListener implements Listener {
     public function onPlayerCreation(PlayerCreationEvent $event) {
         $event->setPlayerClass(LobbyPlayer::class);
     }
@@ -46,46 +45,48 @@ class LobbyListener implements Listener {
         }
     }
 
+    /**
     public function onPlayerInteract(PlayerInteractEvent $event) {
         $player = $event->getPlayer();
         $item = $event->getItem();
 
 		if($player instanceof LobbyPlayer) {
-			if($item->getNamedTagEntry("Cosmetics")) {
+			$nbt = $item->getNamedTag();
+			if($nbt->getString("Cosmetics", "") !== "") {
 				$player->sendCosmeticsForm();
 				$player->sendMessage($this->lobby::PREFIX . "Opened Cosmetics menu");
 			}
-			if($item->getNamedTagEntry("Gadgets")) {
+			if($nbt->getString("Gadgets", "") !== "") {
 				$player->sendGadgetsForm();
 				$player->sendMessage($this->lobby::PREFIX . "Opened Gadgets menu");
 			}
-			if($item->getNamedTagEntry("Profile")) {
+			if($nbt->getString("Profile", "") !== "") {
 				$player->sendProfileForm();
 				$player->sendMessage($this->lobby::PREFIX . "Opened Profile menu");
 			}
-			if($item->getNamedTagEntry("Server Selector")) {
+			if($nbt->getString("Server Selector", "") !== "") {
 				$player->sendServerSelectorForm();
 				$player->sendMessage($this->lobby::PREFIX . "Opened Servers menu");
 			}
 		}
-    }
+    }*/
 
     public function onPlayerJoin(PlayerJoinEvent $event) {
         $player = $event->getPlayer();
 
         if($player instanceof LobbyPlayer) {
-            $player->setLobby($this->lobby);
+            $player->setLobby(Lobby::getInstance());
             $player->joinLobby();
         }
     }
 
     public function onPlayerToggleFlightEvents(PlayerToggleFlightEvent $event) {
         $player = $event->getPlayer();
-
-        if($player->isSurvival()) {    
+        
+        if($player->getGameMode() == GameMode::SURVIVAL()) {
             if($player instanceof LobbyPlayer) {
 				if(!$player->flying()) {
-					$event->setCancelled();
+					$event->cancel();
 					 
 					if(($player->doubleJump - time()) <= 2) {
 						$player->doubleJump = null;
@@ -96,7 +97,7 @@ class LobbyListener implements Listener {
 						$directionVector->y = 1.1;
 
 						$player->setMotion($directionVector);
-						$player->setGamemode(0);
+						$player->setGamemode(GameMode::SURVIVAL());
 					}
                 }
             }
@@ -124,7 +125,7 @@ class LobbyListener implements Listener {
 					if(!$victim->hasPermission("lobby.essentials.staffpuncher.exempt")) {
                         $damager->sendMessage(Core::ERROR_PREFIX . "This Staff is special. Can't punch him today!");
                     } else {
-                        $victim->knockBack($victim, 0, 6, 0, 1);
+                        $victim->knockBack(0, 6, 0, 1.0);
                         $victim->sendMessage(Core::PREFIX . $damager->getName() . " Punched you! Staff disadvantages..");
                         $damager->sendMessage(Core::PREFIX . "You punched " . $victim->getName() . "! Take that Staff!");
                     }
@@ -132,4 +133,21 @@ class LobbyListener implements Listener {
             }
         }
     }
+
+	public function onPlayerMove(PlayerMoveEvent $event) {
+		$player = $event->getPlayer();
+
+		if($player instanceof LobbyPlayer) {
+			if(!$event->getFrom()->equals($event->getTo()->asPosition())) {
+				if($player->updateArea()) {
+					$player->setMotion($event->getFrom()->subtract($player->getLocation()->normalize()->multiply(4)));
+				}
+			}
+			if(!is_null($area = $player->getArea())) {
+				if($area instanceof Lobby && $event->getTo()->getFloorY() < 0) {
+					$player->teleport($player->getWorld()->getSafeSpawn());
+				}
+			}
+		}
+	}
 }

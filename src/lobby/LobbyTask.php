@@ -15,7 +15,7 @@ class LobbyTask extends Task {
         $this->core = $core;
     }
 
-    public function onRun(int $currentTick) {
+    public function onRun() : void {
         $this->runs++;
 
         if($this->runs % 1 === 0) {
