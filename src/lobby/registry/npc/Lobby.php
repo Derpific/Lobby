@@ -34,9 +34,9 @@ class Lobby extends NPC {
     }
 
     public function getPosition() : Position {
-		$level = Server::getInstance()->getWorldManager()->getWorldByName("Lobby");
+		$level = Server::getInstance()->getWorldManager()->getWorldByName("world");
 
-        return new Position(132.5, 15, 128.5, $level);
+        return new Position(132.5, 80, 128.5, $level);
     }
 
 	public function getSize() : EntitySizeInfo {

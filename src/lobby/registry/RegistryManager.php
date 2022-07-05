@@ -16,6 +16,8 @@ use lobby\registry\npc\{
 	Lobby
 };
 
+use lobby\registry\server\Lobby as LobbyServer;
+
 use core\essence\EssenceManager;
 
 use core\network\NetworkManager;
@@ -35,17 +37,17 @@ class RegistryManager extends Manager {
     public function init() {
 		self::$instance = $this;
 
-		EssenceManager::getInstance()->initHologram(new LobbyGreetings());
-		EssenceManager::getInstance()->initHologram(new Parkour());
-		EssenceManager::getInstance()->initHologram(new TopVoter());
+		//EssenceManager::getInstance()->initHologram(new LobbyGreetings());
+		//EssenceManager::getInstance()->initHologram(new Parkour());
+		//EssenceManager::getInstance()->initHologram(new TopVoter());
 
 		EssenceManager::getInstance()->initNPC(new Athie());
 		EssenceManager::getInstance()->initNPC(new HCF());
 		EssenceManager::getInstance()->initNPC(new Lobby());
 
-		NetworkManager::getInstance()->initServer(new Lobby());
+		NetworkManager::getInstance()->initServer(new LobbyServer());
 
-		WorldManager::getInstance()->initArea(new Area("Lobby", new Position(0, 0, 0, Server::getInstance()->getWorldManager()->getWorldByName("nether")), new Position(2000, 256, 2000, Server::getInstance()->getWorldManager()->getWorldByName("lobby")), true, false));
+		WorldManager::getInstance()->initArea(new Area("Lobby", new Position(0, 0, 0, Server::getInstance()->getWorldManager()->getWorldByName("world")), new Position(2000, 256, 2000, Server::getInstance()->getWorldManager()->getWorldByName("world")), true, false));
 	}
 
 	public static function getInstance() : self {

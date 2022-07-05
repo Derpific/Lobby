@@ -18,13 +18,9 @@ use pocketmine\network\mcpe\protocol\LevelEventPacket;
 use pocketmine\network\mcpe\protocol\types\LevelEvent;
 
 class PlayerJoinTask extends Task {
-    private $core;
-    
     private $player;
     
-    public function __construct(Core $core, CorePlayer $player) {
-        $this->core = $core;
-        
+    public function __construct(CorePlayer $player) {
         $this->player = $player;
     }
     
@@ -33,7 +29,7 @@ class PlayerJoinTask extends Task {
 			return;
 		}
 		$this->player->getWorld()->broadcastPacketToViewers($this->player->getPosition(), LevelEventPacket::create(LevelEvent::GUARDIAN_CURSE, 0, $this->player->getPosition()));
-		$this->player->sendTitle($this->core::PREFIX, TextFormat::GRAY . "Lobby");
+		$this->player->sendTitle(Lobby::PREFIX, TextFormat::GRAY . "Lobby");
 		$this->player->sendMessage(Lobby::PREFIX . "Welcome to the Athena Lobby!");
     }
 }

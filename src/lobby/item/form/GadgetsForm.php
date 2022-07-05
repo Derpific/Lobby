@@ -2,11 +2,14 @@
 
 declare(strict_types=1);
 
-namespace core\player\form;
+namespace lobby\item\form;
 
-use core\player\CorePlayer;
+use lobby\Lobby;
+
+use pocketmine\player\Player;
 
 use dktapps\pmforms\CustomForm;
+use dktapps\pmforms\CustomFormResponse;
 use dktapps\pmforms\element\Label;
 
 use pocketmine\utils\TextFormat;
@@ -27,17 +30,17 @@ class GadgetsForm extends CustomForm {
 	}
 
 	public function onSubmit() {
-		return function(CorePlayer $submitter, int $selected) : void {
+		return function(Player $submitter, CustomFormResponse $response) : void {
 		};
 	}
 
 	public function onClose() {
-		return function(CorePlayer $submitter, int $selected) : void {
-			$submitter->sendMessage(Core::PREFIX . "Closed Gadgets menu");
+		return function(Player $submitter) : void {
+			$submitter->sendMessage(Lobby::PREFIX . "Closed Gadgets menu");
 		};
 	}
 
-	public function __construct(CorePlayer $player) {
+	public function __construct(LobbyPlayer $player) {
 		parent::__construct($this->getTitle(), $this->getOptions(), $this->onSubmit(), $this->onClose());
 
 		$player->sendForm($this);

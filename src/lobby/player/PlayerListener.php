@@ -8,6 +8,8 @@ use core\Core;
 
 use core\player\rank\Rank;
 
+use lobby\Lobby;
+
 use pocketmine\event\Listener;
 
 use pocketmine\event\player\{
@@ -28,8 +30,14 @@ use pocketmine\event\entity\{
 use pocketmine\player\GameMode;
 
 class PlayerListener implements Listener {
-    public function onPlayerCreation(PlayerCreationEvent $event) {
-        $event->setPlayerClass(LobbyPlayer::class);
+    private $manager;
+
+    public function __construct(PlayerManager $manager) {
+		$this->manager = $manager;
+    }    
+
+	public function onPlayerCreation(PlayerCreationEvent $event) {
+		$event->setPlayerClass(LobbyPlayer::class);
     }
 
     public function onPlayerExhaustEvents(PlayerExhaustEvent $event) {
@@ -140,7 +148,7 @@ class PlayerListener implements Listener {
 		if($player instanceof LobbyPlayer) {
 			if(!$event->getFrom()->equals($event->getTo()->asPosition())) {
 				if($player->updateArea()) {
-					$player->setMotion($event->getFrom()->subtract($player->getLocation()->normalize()->multiply(4)));
+					//$player->setMotion($event->getFrom()->subtract($player->getLocation()->normalize()->multiply(4)));
 				}
 			}
 			if(!is_null($area = $player->getArea())) {

@@ -16,7 +16,7 @@ class PlayerManager extends Manager {
     public function init() {
 		self::$instance = $this;
 
-		Server::getInstance()->getPluginManager()->registerEvents(new PlayerListener(), Lobby::getInstance());
+		$this->registerListener(new PlayerListener($this), Lobby::getInstance());
 	}
 
 	public static function getInstance() : self {

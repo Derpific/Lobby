@@ -2,21 +2,20 @@
 
 declare(strict_types=1);
 
-namespace core\player\form;
+namespace lobby\item\form;
 
-use core\Core;
+use lobby\Lobby;
 
-use core\network\NetworkManager;
+use lobby\player\LobbyPlayer;
 
-use core\player\CorePlayer;
-use core\player\form\subForm\GlobalProfileForm;
 use dktapps\pmforms\{
 	CustomForm,
-	MenuForm,
-	MenuOption,
-	FormIcon};
+	MenuOption
+};
 
 use pocketmine\utils\TextFormat;
+
+use pocketmine\player\Player;
 
 //TODO: Armor, Emotes, ETC
 class CosmeticsForm extends CustomForm {
@@ -36,8 +35,8 @@ class CosmeticsForm extends CustomForm {
 	}
 
 	public function onSubmit() {
-		return function(CorePlayer $submitter, int $selected) : void {
-			if($submitter instanceof CorePlayer) {
+		return function(Player $submitter, int $selected) : void {
+			if($submitter instanceof LobbyPlayer) {
 				switch($selected) {
 					case 0:
 						if($submitter->hasPermission("trails.use")) {
@@ -55,15 +54,15 @@ class CosmeticsForm extends CustomForm {
 	}
 
 	public function onClose() {
-		return function(CorePlayer $submitter, int $selected) : void {
-			$submitter->sendMessage(Core::PREFIX . "Closed Cosmetics menu");
+		return function(Player $submitter) : void {
+			$submitter->sendMessage(Lobby::PREFIX . "Closed Cosmetics menu");
 		};
 	}
 
-	public function __construct(CorePlayer $player) {
+	public function __construct(LobbyPlayer $player) {
 		parent::__construct($this->getTitle(), $this->getText(), $this->getOptions(), $this->onSubmit(), $this->onClose());
 
 		$player->sendForm($this);
-		$player->sendMessage($this->core::PREFIX . "Opened Cosmetics menu");
+		$player->sendMessage(Lobby::PREFIX . "Opened Cosmetics menu");
 	}
 }

@@ -17,6 +17,8 @@ use lobby\item\{
 use lobby\Lobby;
 use lobby\trails\Trail;
 
+use lobby\player\task\PlayerJoinTask;
+
 use pocketmine\entity\effect\VanillaEffects;
 use pocketmine\entity\Entity;
 
@@ -57,7 +59,7 @@ class LobbyPlayer extends CorePlayer {
 			$this->getInventory()->setItem(3, new Profile());
 			$this->getInventory()->setItem(5, new Cosmetics());
 			$this->getInventory()->setItem(7, new Gadgets());
-			Lobby::getInstance()->getScheduler()->scheduleDelayedTask(new PlayerJoinTask($this->lobby, $this), 20);
+			Lobby::getInstance()->getScheduler()->scheduleDelayedTask(new PlayerJoinTask($this), 20);
 		}
     }
 

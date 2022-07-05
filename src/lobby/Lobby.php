@@ -15,6 +15,7 @@ use lobby\item\{
 use lobby\morph\MorphManager;
 use lobby\parkour\ParkourManager;
 use lobby\registry\RegistryManager;
+use lobby\player\PlayerManager;
 use lobby\stacker\StackerManager;
 use lobby\trails\TrailsManager;
 use pocketmine\inventory\CreativeInventory;
@@ -23,6 +24,9 @@ use Webmozart\PathUtil\Path;
 use pocketmine\plugin\PluginBase;
 
 use pocketmine\utils\TextFormat;
+
+use pocketmine\item\ItemFactory;
+use pocketmine\item\Item;
 
 class Lobby extends PluginBase {
     public static $instance = null;
@@ -48,14 +52,18 @@ class Lobby extends PluginBase {
 		new ParkourManager();
 		new StackerManager();
 		new RegistryManager();
+		new PlayerManager();
 		//$this->trails = new TrailsManager();
-
+		
+		ItemFactory::getInstance()->register(new Cosmetics(), true);
+		ItemFactory::getInstance()->register(new Gadgets(), true);
+		ItemFactory::getInstance()->register(new Profile(), true);
+		ItemFactory::getInstance()->register(new ServerSelector(), true);
 		CreativeInventory::getInstance()->add(new Cosmetics());
 		CreativeInventory::getInstance()->add(new Gadgets());
 		CreativeInventory::getInstance()->add(new Profile());
 		CreativeInventory::getInstance()->add(new ServerSelector());
 		$this->getServer()->getLogger()->notice(self::PREFIX . "Lobby Enabled");
-		$this->getServer()->getPluginManager()->registerEvents(new PlayerListener($this), $this);
     }
 
     public static function getInstance() : Lobby {

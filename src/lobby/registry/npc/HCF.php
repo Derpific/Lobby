@@ -37,7 +37,7 @@ class HCF extends NPC {
     public function getPosition() : Position {
 		$level = Server::getInstance()->getWorldManager()->getWorldByName("Lobby");
 
-        return new Position(138.5, 15, 127.5, $level);
+        return new Position(138.5, 80, 127.5, $level);
     }
 
 	public function getSize() : EntitySizeInfo {

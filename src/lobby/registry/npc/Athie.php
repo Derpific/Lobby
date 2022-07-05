@@ -35,7 +35,7 @@ class Athie extends NPC {
     public function getPosition() : Position {
     	$level = Server::getInstance()->getWorldManager()->getWorldByName("Lobby");
 
-        return new Position(126, 14, 115, $level);
+        return new Position(126, 80, 115, $level);
     }
 
     public function getSize() : EntitySizeInfo {
