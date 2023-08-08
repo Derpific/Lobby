@@ -1,5 +1,5 @@
 # Lobby
-Athena's Lobby Core
+Athena's Lobby Core (Old)
 
 Note:
-This core will not run without Athena's main core, which will not be public. 
+This core depended on Athena's main Core, which will not be public. 
