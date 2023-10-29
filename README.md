@@ -1,5 +1,5 @@
 # Lobby
-Athena's Lobby Core (Old)
+Athena's Lobby Core (Old) plugin for Pocketmine-MP server software
 
 Note:
 This core depended on Athena's main Core, which will not be public. 
